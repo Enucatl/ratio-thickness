@@ -1,4 +1,6 @@
 # load the pypes framework
+import zmq
+import errno
 from pkg_resources import require
 require('pypes')
 
@@ -18,6 +20,27 @@ from pypes.plugins.nm_function import NMFunction
 import pypes.packet
 
 import pprint
+
+
+class ZMQReplier(Component):
+    __metatype__ = 'PUBLISHER'
+
+    def __init__(self):
+        Component.__init__(self)
+        self.set_parameter("port", 40000)
+
+    def run(self):
+        port = self.get_parameter("port")
+        context = zmq.Context()
+        socket = context.socket(zmq.REP)
+        socket.bind("tcp://*:{0}".format(port))
+        while True:
+            for packet in self.receive_all('in'):
+                data = packet.get("data")
+                # if requested through the socket, I will send the data
+                message = socket.recv_string()
+                socket.send_pyobj(data)
+            self.yield_ctrl()
 
 
 class Printer(Component):
@@ -50,7 +73,7 @@ class HelloWorld(Component):
 
 def basic_network_factory():
     hello = HelloWorld()          # our custom component
-    printer = ConsoleOutputWriter()  # writes to console (STDOUT)
+    printer = Printer()  # writes to STDOUT
     network = {
         hello: {printer: ('out', 'in')}
     }
@@ -65,11 +88,13 @@ def add_printer(network):
 
     """
     printing_network = {}
+    port = 40000
     for component, children in network.items():
         printing_network[component] = {}
         for child, ports in children.items():
             splitter = NMFunction(m=2)
-            publisher = Printer()
+            publisher = ZMQReplier()
+            publisher.set_parameter("port", port)
             printing_network[component].update({
                 splitter: (ports[0], "in")
             })
@@ -77,6 +102,7 @@ def add_printer(network):
                 publisher: ("out1", "in"),
                 child: ("out", ports[1])
             }
+            port += 1
     return printing_network
 
 
@@ -87,7 +113,11 @@ def include_network(config):
     :returns: @todo
 
     """
+    zmq_context = zmq.Context()
+    config.registry.zmq_context = zmq_context
     network = basic_network_factory()
+    config.registry.zmq_receiver = zmq_context.socket(zmq.REQ)
+    config.registry.zmq_receiver.connect("tcp://127.0.0.1:40000")
     config.registry.pipeline = Dataflow(add_printer(network))
 
 
@@ -97,9 +127,6 @@ if __name__ == '__main__':
     logging.config.dictConfig(config_dictionary)
     # create a new data flow
     network = basic_network_factory()
-    pprint.pprint(network)
-    #p = Dataflow(network)
-    pprint.pprint(add_printer(network))
     p = Dataflow(add_printer(network))
     #send some data through the data flow
     for name in ['Tom', 'Dick', 'Harry']:

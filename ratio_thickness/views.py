@@ -1,5 +1,6 @@
 from pyramid.view import view_config
 import pypes.packet
+import stackless
 
 network = {}
 
@@ -21,7 +22,10 @@ def get_components(request):
     return {}
 
 
-@view_config(route_name='forever', renderer='json')
+@view_config(route_name='name', renderer='json')
 def get_forever(request):
-    request.registry.forever()
-    return {}
+    print("ZMQ receiver receiving")
+    request.registry.zmq_receiver.send_string("get me stuff!")
+    value = request.registry.zmq_receiver.recv_pyobj()
+    print("ZMQ receiver received", value)
+    return value
