@@ -1,31 +1,42 @@
 from pyramid.view import view_config
 import pypes.packet
-import stackless
-
-network = {}
 
 
-@view_config(route_name='component', renderer='json')
-def get_component(request):
-    name = request.matchdict['name']
-    return network[name]
-
-
-@view_config(route_name='components', renderer='json')
-def get_components(request):
-    print(request.registry.settings)
-    print(request.registry.pipeline)
+@view_config(route_name='pipeline', renderer='json')
+def start_pipeline(request):
     p = request.registry.pipeline
     packet = pypes.packet.Packet()
-    packet.set("data", "Tom")
+    packet.set("file_name", request.matchdict["file_name"])
     p.send(packet)
     return {}
 
 
-@view_config(route_name='name', renderer='json')
-def get_forever(request):
-    print("ZMQ receiver receiving")
-    request.registry.zmq_receiver.send_string("get me stuff!")
-    value = request.registry.zmq_receiver.recv_pyobj()
-    print("ZMQ receiver received", value)
-    return value
+@view_config(route_name='pipelineoutput', renderer='json')
+def get_output(request):
+    port = request.matchdict["port"]
+    socket = request.registry.sockets[int(port)]
+    socket.send_string("request")
+    packet = socket.recv_pyobj()
+    print("ZMQ receiver received", packet)
+    return packet
+
+
+@view_config(route_name='home', renderer='templates/index.mako')
+def get_home(request):
+    return {"title": "Home"}
+
+
+@view_config(route_name='reconstruction',
+             renderer='templates/reconstruction.mako')
+def get_reconstruction(request):
+    return {"title": "Reconstruction"}
+
+
+@view_config(route_name='segmentation', renderer='templates/segmentation.mako')
+def get_segmentation(request):
+    return {"title": "Segmentation"}
+
+
+@view_config(route_name='average', renderer='templates/average.mako')
+def get_average(request):
+    return {"title": "Average"}

@@ -1,6 +1,7 @@
 """Calculate average df, abs, ratio values for each line."""
 
 import numpy as np
+import zmq
 
 import logging
 import logging.config
@@ -87,16 +88,16 @@ def ratio_thickness_network():
         abs_reader: {
             average_abs: ("out", "in"),
             feature_segmentation: ("out1", "in"),
-            log_ratio: ("out2", "in1")
-            abs_reader_replier: ("out3", "in")
+            log_ratio: ("out2", "in1"),
+            abs_reader_replier: ("out3", "in"),
         },
         df_reader: {
             log_ratio: ("out", "in"),
-            average_df: ("out1", "in")
-            df_reader_replier: ("out2", "in")
+            average_df: ("out1", "in"),
+            df_reader_replier: ("out2", "in"),
         },
         feature_segmentation: {
-            feature_segmentation_out: ("out", "in")
+            feature_segmentation_out: ("out", "in"),
         },
         log_ratio: {
             average_r: ("out", "in")
@@ -104,17 +105,17 @@ def ratio_thickness_network():
         feature_segmentation_out: {
             average_abs: ("out", "in1"),
             average_df: ("out1", "in1"),
-            average_r: ("out2", "in1")
-            feature_segmentation_replier: ("out3", "in1")
+            average_r: ("out2", "in1"),
+            feature_segmentation_replier: ("out3", "in"),
         },
         average_abs: {
-            average_abs_replier: ("out", "in")
+            average_abs_replier: ("out", "in"),
         },
         average_df: {
-            average_df_replier: ("out", "in")
+            average_df_replier: ("out", "in"),
         },
         average_r: {
-            average_r_replier: ("out", "in")
+            average_r_replier: ("out", "in"),
         },
     }
     return network
@@ -125,7 +126,7 @@ def include_pipeline(config):
     config.registry.sockets = {}
     network = ratio_thickness_network()
     for port in range(40000, 40007):
-        socket = config.registry.zmq_context.sockets(zmq.REQ)
+        socket = config.registry.zmq_context.socket(zmq.REQ)
         socket.connect("tcp://127.0.0.1:{0}".format(port))
         config.registry.sockets[port] = socket
     config.registry.pipeline = pypes.pipeline.Dataflow(network, n=4)
