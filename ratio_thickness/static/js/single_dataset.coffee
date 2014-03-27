@@ -1,12 +1,13 @@
 jQuery ->
+    #send file name to the pipeline
     jQuery.ajax {
         url: "/pipeline"
         type: "POST"
         contentType: "application/json"
         dataType: "json"
-        data: {
-            filename: "/static/data/S00918_S00957.hdf5"
-        }
+        data: JSON.stringify({
+            filename: "ratio_thickness/static/data/S00918_S00957.hdf5"
+        })
     }
     width = $("#abs-reconstruction").width()
     absorption_image = d3.chart.image()

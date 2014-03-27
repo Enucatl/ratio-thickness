@@ -6,7 +6,6 @@ import zmq
 import logging
 import logging.config
 from r_distribution.logger_config import config_dictionary
-from r_distribution.basic_parser import BasicParser
 log = logging.getLogger()
 
 import pypes.pipeline
@@ -14,7 +13,7 @@ import pypes.packet
 import pypes.component
 from pypes.component import HigherOrderComponent
 
-from pypes.plugins.hdf5 import Hdf5Reader
+from pypes.plugins.hdf5 import Hdf5ReadDataset
 from pypes.plugins.zmq import ZmqPush
 from pypes.plugins.nm_function import NMFunction
 from r_distribution.feature_segmentation import ThicknessFeatureSegmentation
@@ -22,7 +21,7 @@ from r_distribution.feature_segmentation import ThicknessFeatureSegmentation
 
 def multiple_outputs_reader(m=2):
     "repeat the output of the reader m times"
-    reader = Hdf5Reader()
+    reader = Hdf5ReadDataset()
     reader.__metatype__ = "TRANSFORMER"
     out = NMFunction(n=1, m=m)
     network = {
@@ -35,6 +34,8 @@ def multiple_outputs_reader(m=2):
 
 def average_function(a, w):
     "average over last axis"
+    print("A SHAPES", a.shape)
+    print("W SHAPES", w.shape)
     return np.average(a, axis=-1, weights=w)
 
 
@@ -130,3 +131,21 @@ def include_pipeline(config):
         socket.connect("tcp://127.0.0.1:{0}".format(port))
         config.registry.sockets[port] = socket
     config.registry.pipeline = pypes.pipeline.Dataflow(network, n=4)
+
+
+if __name__ == '__main__':
+    config_dictionary['handlers']['default']['level'] = 'DEBUG'
+    config_dictionary['loggers']['']['level'] = 'DEBUG'
+    logging.config.dictConfig(config_dictionary)
+    pipeline = pypes.pipeline.Dataflow(ratio_thickness_network())
+    packet = pypes.packet.Packet()
+    packet.set("file_name", "static/data/S00918_S00957.hdf5")
+    sockets = []
+    context = zmq.Context()
+    pipeline.send(packet)
+    for i in range(40000, 40007):
+        socket = context.socket(zmq.PULL)
+        socket.connect("tcp://127.0.0.1:{0}".format(i))
+        socket.recv_json()
+        sockets.append(socket)
+    pipeline.close()

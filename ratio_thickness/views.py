@@ -1,14 +1,17 @@
 from pyramid.view import view_config
 import pypes.packet
 
+from pypes.plugins.zmq import recv_array
+
 
 @view_config(route_name='pipeline', renderer='json')
 def start_pipeline(request):
-    print("pipeline request was", request)
-    print("matched filename was", request.matchdict["filename"])
+    json = request.json_body
+    print("pipeline json_body was", json)
     p = request.registry.pipeline
     packet = pypes.packet.Packet()
-    packet.set("file_name", request.matchdict["filename"])
+    packet.set("file_name", json["filename"])
+    print("STARTING PIPELINE!")
     p.send(packet)
     return {}
 
@@ -17,9 +20,9 @@ def start_pipeline(request):
 def get_output(request):
     port = request.matchdict["port"]
     socket = request.registry.sockets[int(port)]
-    packet = socket.recv_pyobj()
-    print("ZMQ receiver received", packet)
-    return packet
+    array = recv_array(socket)
+    print("ZMQ receiver received", array)
+    return array.tolist()
 
 
 @view_config(route_name='home', renderer='templates/index.mako')
