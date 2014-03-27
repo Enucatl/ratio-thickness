@@ -4,9 +4,11 @@ import pypes.packet
 
 @view_config(route_name='pipeline', renderer='json')
 def start_pipeline(request):
+    print("pipeline request was", request)
+    print("matched filename was", request.matchdict["filename"])
     p = request.registry.pipeline
     packet = pypes.packet.Packet()
-    packet.set("file_name", request.matchdict["file_name"])
+    packet.set("file_name", request.matchdict["filename"])
     p.send(packet)
     return {}
 
@@ -15,7 +17,6 @@ def start_pipeline(request):
 def get_output(request):
     port = request.matchdict["port"]
     socket = request.registry.sockets[int(port)]
-    socket.send_string("request")
     packet = socket.recv_pyobj()
     print("ZMQ receiver received", packet)
     return packet
@@ -26,10 +27,10 @@ def get_home(request):
     return {"title": "Home"}
 
 
-@view_config(route_name='reconstruction',
-             renderer='templates/reconstruction.mako')
+@view_config(route_name='single_dataset',
+             renderer='templates/single_dataset.mako')
 def get_reconstruction(request):
-    return {"title": "Reconstruction"}
+    return {"title": "Single dataset analysis"}
 
 
 @view_config(route_name='segmentation', renderer='templates/segmentation.mako')

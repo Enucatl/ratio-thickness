@@ -54,6 +54,10 @@
 
 <%block name="extra_js">
     <script
+        src="${assetmutator_url('ratio_thickness:static/js/image.coffee')}"
+        type="text/javascript">
+    </script>
+    <script
         src="${assetmutator_url('ratio_thickness:static/js/single_dataset.coffee')}"
         type="text/javascript">
     </script>

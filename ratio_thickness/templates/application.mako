@@ -53,9 +53,9 @@
       <!-- Example row of columns -->
       <div class="row">
         <div class="col-md-4">
-            <h2>Reconstruction</h2>
+            <h2>Single dataset</h2>
             <p>Where the phase stepping curves are analyzed</p>
-            <p><a class="btn btn-default" href="/reconstruction" role="button">View details &raquo;</a></p>
+            <p><a class="btn btn-default" href="/single_dataset" role="button">View details &raquo;</a></p>
         </div>
         <div class="col-md-4">
             <h2>Segmentation</h2>
