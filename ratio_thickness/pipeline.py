@@ -15,7 +15,7 @@ import pypes.component
 from pypes.component import HigherOrderComponent
 
 from pypes.plugins.hdf5 import Hdf5Reader
-from pypes.plugins.zmq import ZmqReplier
+from pypes.plugins.zmq import ZmqPush
 from pypes.plugins.nm_function import NMFunction
 from r_distribution.feature_segmentation import ThicknessFeatureSegmentation
 
@@ -63,23 +63,23 @@ def ratio_thickness_network():
     in1out2.__metatype__ = "ADAPTER"
     in1out2.set_parameter("function", datasets)
     abs_reader = HigherOrderComponent(multiple_outputs_reader(m=4))
-    abs_reader_replier = ZmqReplier(port=40000)
+    abs_reader_replier = ZmqPush(port=40000)
     df_reader = HigherOrderComponent(multiple_outputs_reader(m=3))
-    df_reader_replier = ZmqReplier(port=40001)
+    df_reader_replier = ZmqPush(port=40001)
     feature_segmentation = ThicknessFeatureSegmentation()
     feature_segmentation_out = NMFunction(m=4)
-    feature_segmentation_replier = ZmqReplier(port=40002)
+    feature_segmentation_replier = ZmqPush(port=40002)
     log_ratio = NMFunction(n=2, m=2)
     log_ratio.set_parameter(
         "function",
         log_function)
-    log_ratio_replier = ZmqReplier(port=40003)
+    log_ratio_replier = ZmqPush(port=40003)
     average_abs = average()
-    average_abs_replier = ZmqReplier(port=40004)
+    average_abs_replier = ZmqPush(port=40004)
     average_df = average()
-    average_df_replier = ZmqReplier(port=40005)
+    average_df_replier = ZmqPush(port=40005)
     average_r = average()
-    average_r_replier = ZmqReplier(port=40006)
+    average_r_replier = ZmqPush(port=40006)
     network = {
         in1out2: {
             abs_reader: ("out", "in"),
@@ -126,7 +126,7 @@ def include_pipeline(config):
     config.registry.sockets = {}
     network = ratio_thickness_network()
     for port in range(40000, 40007):
-        socket = config.registry.zmq_context.socket(zmq.REQ)
+        socket = config.registry.zmq_context.socket(zmq.PULL)
         socket.connect("tcp://127.0.0.1:{0}".format(port))
         config.registry.sockets[port] = socket
     config.registry.pipeline = pypes.pipeline.Dataflow(network, n=4)
