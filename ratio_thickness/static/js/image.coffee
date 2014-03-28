@@ -7,15 +7,13 @@ d3.chart.image = ->
     width = undefined
     height = undefined
     pixels = undefined
-    pixel_height = 5
-    pixel_width = 2
     dispatch = d3.dispatch(chart, "hover")
 
     chart = (container) ->
         g = container
-        pixels = g.append "g"
+        pixels = g
+            .append("g")
             .attr "id", "image-pixels"
-        chart.update()
 
     chart.update = ->
         dx = data[0].length
@@ -23,49 +21,54 @@ d3.chart.image = ->
 
         # Fix the aspect ratio.
         ka = dy / dx
-        height = 3 * width * ka
+        height = Math.round(9 * width * ka)
+
+        g
+            .attr "width", width
+            .attr "height", height
 
         x = d3.scale.ordinal()
-            .domain [0, dx]
+            .domain d3.range(dx)
             .rangePoints [0, width], 0
         y = d3.scale.ordinal()
-            .domain [0, dy]
+            .domain d3.range(dy)
             .rangePoints [height, 0], 0
+        pixel_height = y(0) - y(1)
+        pixel_width = x(1) - x(0)
         flattened = data.reduce (a, b) -> a.concat b
         sorted = flattened.sort d3.ascending
         min_scale = d3.quantile sorted, 0.05
         max_scale = d3.quantile sorted, 0.95
         color = d3.scale.linear()
-            .domain [min_scale, max_scale]
+            .domain [min_scale, max_scale] 
             .range ["white", "black"]
 
-        layout = {}
-        for i of dx
-            for j of dy
-                layout.append {
+        layout = []
+        for i in [0..(dx - 1)]
+            for j in [0..(dy - 1)]
+                layout.push {
                     row: i
                     col: j
-                    value: data[i][j]
+                    value: data[j][i]
                 }
 
         rectangles = pixels.selectAll "rect"
             .data layout
 
         rectangles.enter()
-            .transition()
             .append "rect"
             .classed "image-pixels", true
             .attr "x", (d) -> x(d.row)
             .attr "y", (d) -> y(d.col)
             .attr "height", pixel_height
             .attr "width", pixel_width
-            .attr "fill", color(d.value)
+            .attr "fill", (d) -> color(d.value)
+            .transition()
 
         rectangles.exit()
             .transition()
             .remove()
         
-
         chart.highlight = (data) ->
             console.log "image highlight", data
 

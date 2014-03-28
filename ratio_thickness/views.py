@@ -7,13 +7,10 @@ from pypes.plugins.zmq import recv_array
 @view_config(route_name='pipeline', renderer='json')
 def start_pipeline(request):
     json = request.json_body
-    print("pipeline json_body was", json)
-    p = request.registry.pipeline
     packet = pypes.packet.Packet()
     packet.set("file_name", json["filename"])
-    print("STARTING PIPELINE!")
-    p.send(packet)
-    return {}
+    request.registry.pipeline.send(packet)
+    return "pipeline started with {0[filename]}".format(json)
 
 
 @view_config(route_name='pipelineoutput', renderer='json')

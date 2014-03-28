@@ -34,9 +34,7 @@ def multiple_outputs_reader(m=2):
 
 def average_function(a, w):
     "average over last axis"
-    print("A SHAPES", a.shape)
-    print("W SHAPES", w.shape)
-    return np.average(a, axis=-1, weights=w)
+    return (np.average(a, axis=-1, weights=w),)
 
 
 def average():
@@ -49,14 +47,13 @@ def average():
 
 def datasets(*_):
     "return the name of the datasets"
-    return [
-        "postprocessing/absorption",
-        "postprocessing/visibility_reduction"]
+    return ("postprocessing/absorption",
+            "postprocessing/visibility_reduction")
 
 
 def log_function(df, a):
     "logarithm ratio"
-    return np.log(df)/np.log(a)
+    return (np.log(df)/np.log(a),)
 
 
 def ratio_thickness_network():
@@ -101,7 +98,8 @@ def ratio_thickness_network():
             feature_segmentation_out: ("out", "in"),
         },
         log_ratio: {
-            average_r: ("out", "in")
+            average_r: ("out", "in"),
+            log_ratio_replier: ("out1", "in"),
         },
         feature_segmentation_out: {
             average_abs: ("out", "in1"),
@@ -137,15 +135,18 @@ if __name__ == '__main__':
     config_dictionary['handlers']['default']['level'] = 'DEBUG'
     config_dictionary['loggers']['']['level'] = 'DEBUG'
     logging.config.dictConfig(config_dictionary)
-    pipeline = pypes.pipeline.Dataflow(ratio_thickness_network())
+    pipeline = pypes.pipeline.Dataflow(ratio_thickness_network(), n=3)
     packet = pypes.packet.Packet()
     packet.set("file_name", "static/data/S00918_S00957.hdf5")
-    sockets = []
     context = zmq.Context()
-    pipeline.send(packet)
+    sockets = []
     for i in range(40000, 40007):
         socket = context.socket(zmq.PULL)
         socket.connect("tcp://127.0.0.1:{0}".format(i))
+        sockets.append(socket)
+    pipeline.send(packet)
+    for socket in sockets:
+        print("socket receiving")
         socket.recv_json()
         sockets.append(socket)
     pipeline.close()
