@@ -19,9 +19,10 @@ d3.chart.image = ->
         dx = data[0].length
         dy = data.length
 
-        # Fix the aspect ratio.
-        ka = dy / dx
-        height = Math.round(9 * width * ka)
+        pixel_height = 8
+        pixel_width = 1
+        height = pixel_height * dy
+        width = pixel_width * dx
 
         g
             .attr "width", width
@@ -29,12 +30,10 @@ d3.chart.image = ->
 
         x = d3.scale.ordinal()
             .domain d3.range(dx)
-            .rangePoints [0, width], 0
+            .rangePoints [0, width - pixel_width], 0
         y = d3.scale.ordinal()
             .domain d3.range(dy)
-            .rangePoints [height, 0], 0
-        pixel_height = y(0) - y(1)
-        pixel_width = x(1) - x(0)
+            .rangePoints [height - pixel_height, 0], 0
         flattened = data.reduce (a, b) -> a.concat b
         sorted = flattened.sort d3.ascending
         min_scale = d3.quantile sorted, 0.05
