@@ -21,6 +21,17 @@
     </div>
 </div>
 
+<h2>Ratio</h2>
+
+<div class="row" id="ratio-plot-placeholder">
+    <div class="col-md-6" id="ratio-image">
+        Ratio image
+    </div>
+    <div class="col-md-6" id="ratio-image-profile">
+        Ratio profile
+    </div>
+</div>
+
 <h2>Segmentation</h2>
 
 <div class="row" id="segmentation-mask-placeholder">
@@ -32,14 +43,11 @@
     </div>
 </div>
 
-<h2>Ratio - angle</h2>
+<h2>Ratio vs position</h2>
 
 <div class="row" id="ratio-plot-placeholder">
-    <div class="col-md-6" id="ratio-image">
+    <div class="col-md-12" id="ratio-plot">
         Ratio image
-    </div>
-    <div class="col-md-6" id="ratio-plot">
-        Ratio plot
     </div>
 </div>
 
@@ -49,6 +57,11 @@
 <%block name="extra_js">
     <script
         src="${assetmutator_url('ratio_thickness:static/js/profile.coffee')}"
+        type="text/javascript">
+    </script>
+
+    <script
+        src="${assetmutator_url('ratio_thickness:static/js/scatter.coffee')}"
         type="text/javascript">
     </script>
 
@@ -65,7 +78,7 @@
     <script type="text/javascript">
         $(document).ready(function() {
             var filename = "ratio_thickness/static/data/S00918_S00957.hdf5"
-            var unused = [40004, 40005, 40006]
+            var unused = [40004, 40005]
             for (item in unused) {
                 d3.json("/pipelineoutput/" + unused[item], function(error, json) {
                     if (error) {

@@ -1,39 +1,34 @@
 if not d3.chart?
     d3.chart = {}
 
-d3.chart.profile = ->
+d3.chart.scatter = ->
     margin = {top: 20, right: 20, bottom: 20, left: 30}
-    width = 555
-    height = 400
+    width = 900
+    height = 600
     x_value = (d, i) -> i
     y_value = (d, i) -> d
     x_scale = d3.scale.linear()
     y_scale = d3.scale.linear()
-        .domain [0, 1.2]
+        .domain [0, 6]
     x_axis = d3.svg.axis()
         .scale x_scale 
         .orient "bottom"
     y_axis = d3.svg.axis()
         .scale y_scale 
         .orient "left"
-    x = (d) ->
-        x_scale(d[0])
-    y = (d) ->
-        y_scale(d[1])
-    line = d3.svg.line()
-        .x x 
-        .y y 
 
     chart = (selection) ->
         selection.each (data) ->
-
             #convert to standard format
             data = data.map (d, i) ->
-                [x_value.call(data, d, i), y_value.call(data, d, i)]
+                {
+                    x: x_value.call(data, d, i),
+                    y: y_value.call(data, d, i)
+                }
 
             #update scales
             x_scale
-                .domain d3.extent data, (d) -> d[0] 
+                .domain d3.extent data, (d) -> d.x
                 .range [0, width - margin.left - margin.right]
                 .nice()
             y_scale
@@ -49,8 +44,8 @@ d3.chart.profile = ->
                 .append "svg"
                 .append "g"
 
-            g_enter.append "path"
-                .classed "line", true
+            g_circles = g_enter.append "g"
+                .classed "circles", true
             g_enter.append "g"
                 .classed "x axis", true
             g_enter.append "g"
@@ -66,8 +61,16 @@ d3.chart.profile = ->
                 .attr "transform", "translate(#{margin.left}, #{margin.top})"
 
             #update the line path
-            g.select ".line"
-                .attr "d", line
+            g_circles
+                .selectAll ".circle"
+                .data(data)
+                .enter()
+                .append "circle"
+                .classed "circle", true
+                .style "fill", "darkblue"
+                .attr "r", 3
+                .attr "cx", (d) -> x_scale(d.x)
+                .attr "cy", (d) -> y_scale(d.y)
 
             #update axes
             g.select ".x.axis"
