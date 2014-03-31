@@ -27,7 +27,7 @@
     <div class="col-md-6" id="abs-segmentation-mask">
         Absorption mask
     </div>
-    <div class="col-md-6" id="abs-segmentation-profile">
+    <div class="col-md-6" id="abs-segmentation-mask-profile">
         Absorption mask profile
     </div>
 </div>
@@ -48,13 +48,20 @@
 
 <%block name="extra_js">
     <script
+        src="${assetmutator_url('ratio_thickness:static/js/profile.coffee')}"
+        type="text/javascript">
+    </script>
+
+    <script
         src="${assetmutator_url('ratio_thickness:static/js/image.coffee')}"
         type="text/javascript">
     </script>
+
     <script
         src="${assetmutator_url('ratio_thickness:static/js/single_dataset.coffee')}"
         type="text/javascript">
     </script>
+
     <script type="text/javascript">
         $(document).ready(function() {
             var filename = "ratio_thickness/static/data/S00918_S00957.hdf5"

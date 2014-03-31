@@ -28,6 +28,21 @@ jQuery ->
                 port: 40003
             },
         ]
+        window.profiles = [
+            {
+                id: "#abs-reconstruction-profile"
+            }
+        ]
+
+        set_profiles = (profile) ->
+            profile.profile = d3.chart.profile()
+            element = $(profile.id)
+            factor = 0.618
+            profile.profile.width element.width()
+            profile.profile.height Math.round(element.width() * factor)
+
+        (set_profiles profile for profile in window.profiles)
+
         request_json = (image) ->
             placeholder = "##{image.placeholder}"
             port = image.port

@@ -7,7 +7,7 @@ d3.chart.image = ->
     width = undefined
     height = undefined
     pixels = undefined
-    dispatch = d3.dispatch(chart, "hover")
+    dispatch = d3.dispatch chart, "hover" 
 
     chart = (container) ->
         g = container
@@ -46,8 +46,8 @@ d3.chart.image = ->
         for i in [0..(dx - 1)]
             for j in [0..(dy - 1)]
                 layout.push {
-                    row: i
-                    col: j
+                    col: i
+                    row: j
                     value: data[j][i]
                 }
 
@@ -57,11 +57,21 @@ d3.chart.image = ->
         rectangles.enter()
             .append "rect"
             .classed "image-pixels", true
-            .attr "x", (d) -> x(d.row)
-            .attr "y", (d) -> y(d.col)
+            .attr "x", (d) -> x(d.col)
+            .attr "y", (d) -> y(d.row)
             .attr "height", pixel_height
             .attr "width", pixel_width
             .attr "fill", (d) -> color(d.value)
+            .on "mouseover", (d) ->
+                id = $(this).parents("svg").attr("id")
+                profile_id = "##{id}-profile"
+                element = d3.select(profile_id)
+                if element?
+                    profiles = $.grep window.profiles, (e) -> e.id == profile_id 
+                    if profiles?
+                        element
+                            .datum data[d.row]
+                            .call profiles[0].profile
             .transition()
 
         rectangles.exit()
