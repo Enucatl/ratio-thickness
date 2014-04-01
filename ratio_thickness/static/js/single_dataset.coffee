@@ -16,6 +16,9 @@ jQuery ->
         df_image = d3.chart.image()
             .key 1
 
+        profiles = d3.chart.profile()
+
+        factor = 0.618
         d3.json "/pipelineoutput/40000", (error, json) ->
             return console.warn error if error?
             d3.select "#abs-image"
@@ -25,12 +28,25 @@ jQuery ->
                 .data [json]
                 .call df_image
 
+            profile_data = {
+                row: 0
+                absorption: json[0][0]
+                dark_field: json[1][0]
+                mask: json[2][0]
+            }
+
+            width = $("#profiles").width()
+            profiles.width width
+            profiles.height factor * width
+            d3.select "#profiles"
+                .data [profile_data]
+                .call profiles
+
         ratio_pos = d3.chart.scatter()
         ratio_abs = d3.chart.scatter()
         ratio_df = d3.chart.scatter()
         d3.json "/pipelineoutput/40001", (error, json) ->
             return console.warn error if error?
-            factor = 0.618
 
             ratio_pos.x_scale().domain [0, json[2].length]
             ratio_pos.y_scale().domain [0, 6]
