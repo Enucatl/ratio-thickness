@@ -16,7 +16,11 @@ from pypes.component import HigherOrderComponent
 from pypes.plugins.hdf5 import Hdf5ReadDataset
 from pypes.plugins.zmq import ZmqPush
 from pypes.plugins.nm_function import NMFunction
-from r_distribution.feature_segmentation import ThicknessFeatureSegmentation
+from r_distribution.feature_segmentation import MinimumThresholdSegmentation
+
+
+def merge_numpy_arrays(*args):
+    return ([a[...].tolist() for a in args],)
 
 
 def multiple_outputs_reader(m=2):
@@ -61,23 +65,22 @@ def ratio_thickness_network():
     in1out2.__metatype__ = "ADAPTER"
     in1out2.set_parameter("function", datasets)
     abs_reader = HigherOrderComponent(multiple_outputs_reader(m=4))
-    abs_reader_replier = ZmqPush(port=40000)
     df_reader = HigherOrderComponent(multiple_outputs_reader(m=3))
-    df_reader_replier = ZmqPush(port=40001)
-    feature_segmentation = ThicknessFeatureSegmentation()
+    feature_segmentation = MinimumThresholdSegmentation()
     feature_segmentation_out = NMFunction(m=4)
-    feature_segmentation_replier = ZmqPush(port=40002)
-    log_ratio = NMFunction(n=2, m=2)
+    reader_outputs = NMFunction(n=3)
+    reader_outputs.set_parameter("function", merge_numpy_arrays)
+    reader_replier = ZmqPush(port=40000)
+    log_ratio = NMFunction(n=2)
     log_ratio.set_parameter(
         "function",
         log_function)
-    log_ratio_replier = ZmqPush(port=40003)
     average_abs = average()
-    average_abs_replier = ZmqPush(port=40004)
     average_df = average()
-    average_df_replier = ZmqPush(port=40005)
     average_r = average()
-    average_r_replier = ZmqPush(port=40006)
+    average_outputs = NMFunction(n=3)
+    average_replier = ZmqPush(port=40001)
+    average_outputs.set_parameter("function", merge_numpy_arrays)
     network = {
         in1out2: {
             abs_reader: ("out", "in"),
@@ -87,34 +90,39 @@ def ratio_thickness_network():
             average_abs: ("out", "in"),
             feature_segmentation: ("out1", "in"),
             log_ratio: ("out2", "in1"),
-            abs_reader_replier: ("out3", "in"),
+            reader_outputs: ("out3", "in"),
         },
         df_reader: {
             log_ratio: ("out", "in"),
             average_df: ("out1", "in"),
-            df_reader_replier: ("out2", "in"),
+            reader_outputs: ("out2", "in1"),
         },
         feature_segmentation: {
             feature_segmentation_out: ("out", "in"),
         },
         log_ratio: {
             average_r: ("out", "in"),
-            log_ratio_replier: ("out1", "in"),
         },
         feature_segmentation_out: {
             average_abs: ("out", "in1"),
             average_df: ("out1", "in1"),
             average_r: ("out2", "in1"),
-            feature_segmentation_replier: ("out3", "in"),
+            reader_outputs: ("out3", "in2"),
         },
         average_abs: {
-            average_abs_replier: ("out", "in"),
+            average_outputs: ("out", "in"),
         },
         average_df: {
-            average_df_replier: ("out", "in"),
+            average_outputs: ("out", "in1"),
         },
         average_r: {
-            average_r_replier: ("out", "in"),
+            average_outputs: ("out", "in2"),
+        },
+        average_outputs: {
+            average_replier: ("out", "in"),
+        },
+        reader_outputs: {
+            reader_replier: ("out", "in"),
         },
     }
     return network
@@ -124,11 +132,12 @@ def include_pipeline(config):
     config.registry.zmq_context = zmq.Context()
     config.registry.sockets = {}
     network = ratio_thickness_network()
-    for port in range(40000, 40007):
+    for port in range(40000, 40002):
         socket = config.registry.zmq_context.socket(zmq.PULL)
         socket.connect("tcp://127.0.0.1:{0}".format(port))
         config.registry.sockets[port] = socket
     config.registry.pipeline = pypes.pipeline.Dataflow(network, n=4)
+    log.info("Pyramid include pipeline done")
 
 
 if __name__ == '__main__':
@@ -140,7 +149,7 @@ if __name__ == '__main__':
     packet.set("file_name", "static/data/S00918_S00957.hdf5")
     context = zmq.Context()
     sockets = []
-    for i in range(40000, 40007):
+    for i in range(40000, 40002):
         socket = context.socket(zmq.PULL)
         socket.connect("tcp://127.0.0.1:{0}".format(i))
         sockets.append(socket)
@@ -148,5 +157,4 @@ if __name__ == '__main__':
     for socket in sockets:
         print("socket receiving")
         socket.recv_json()
-        sockets.append(socket)
     pipeline.close()
