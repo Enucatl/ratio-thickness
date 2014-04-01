@@ -5,18 +5,18 @@ d3.chart.scatter = ->
     margin = {top: 20, right: 20, bottom: 20, left: 30}
     width = 900
     height = 600
-    x_value = (d, i) -> i
-    y_value = (d, i) -> d
+    x_value = (d, i) -> d[0]
+    y_value = (d, i) -> d[1]
     x_scale = d3.scale.linear()
     y_scale = d3.scale.linear()
-        .domain [0, 6]
     x_axis = d3.svg.axis()
         .scale x_scale 
         .orient "bottom"
     y_axis = d3.svg.axis()
         .scale y_scale 
         .orient "left"
-
+    x_title = undefined
+    y_title = undefined
     chart = (selection) ->
         selection.each (data) ->
             #convert to standard format
@@ -28,9 +28,7 @@ d3.chart.scatter = ->
 
             #update scales
             x_scale
-                .domain d3.extent data, (d) -> d.x
                 .range [0, width - margin.left - margin.right]
-                .nice()
             y_scale
                 .range [height - margin.top - margin.bottom, 0]
 
@@ -76,8 +74,22 @@ d3.chart.scatter = ->
             g.select ".x.axis"
                 .attr "transform", "translate(0, #{y_scale.range()[0]})"
                 .call x_axis
+                .append "text"
+                .classed "label", true
+                .attr "x", width - margin.right - margin.left
+                .attr "y", -6
+                .style "text-anchor", "end"
+                .text x_title
+
             g.select ".y.axis"
                 .call y_axis
+                .append "text"
+                .classed "label", true
+                .attr "y", 6
+                .attr "transform", "rotate(-90)"
+                .attr "dy", ".71em"
+                .style "text-anchor", "end"
+                .text y_title
 
     chart.width = (value) ->
         if not arguments.length
@@ -107,6 +119,18 @@ d3.chart.scatter = ->
         if not arguments.length
             return y_value
         y_value = value
+        chart
+
+    chart.x_title = (value) ->
+        if not arguments.length
+            return x_title
+        x_title = value
+        chart
+
+    chart.y_title = (value) ->
+        if not arguments.length
+            return y_title
+        y_title = value
         chart
 
     chart.x_scale = (value) ->

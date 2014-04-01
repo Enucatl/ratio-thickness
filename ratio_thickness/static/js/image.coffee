@@ -10,10 +10,10 @@ d3.chart.image = ->
     color = d3.scale.linear()
 
     chart = (selection) ->
-        selection.each(data) ->
+        selection.each (data) ->
 
             #get the right key from the object
-            this_data = data[name]
+            this_data = data[key]
             dx = this_data[0].length
             dy = this_data.length
 

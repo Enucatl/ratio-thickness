@@ -22,13 +22,13 @@
 
 <div class="row" id="ratio-plots">
     <div class="col-md-4" id="ratio-position">
-        Ratio image
+        Log ratio for the rows above
     </div>
     <div class="col-md-4" id="ratio-abs">
-        Ratio profile
+        Log ratio as a function of transmission
     </div>
     <div class="col-md-4" id="ratio-df">
-        Ratio profile
+        Log ratio as a function of dark field
     </div>
 </div>
 
@@ -54,5 +54,12 @@
     <script
         src="${assetmutator_url('ratio_thickness:static/js/single_dataset.coffee')}"
         type="text/javascript">
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var filename = "ratio_thickness/static/data/S00918_S00957.hdf5"
+            window.loadimages(filename);
+        });
     </script>
 </%block>

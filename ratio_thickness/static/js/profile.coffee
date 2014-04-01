@@ -5,8 +5,8 @@ d3.chart.profile = ->
     margin = {top: 20, right: 20, bottom: 20, left: 30}
     width = 555
     height = 400
-    x_value = (d, i) -> i
-    y_value = (d, i) -> d
+    x_value = (d, i) -> d[0]
+    y_value = (d, i) -> d[1]
     x_scale = d3.scale.linear()
     y_scale = d3.scale.linear()
         .domain [0, 1.2]
