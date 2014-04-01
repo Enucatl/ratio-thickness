@@ -16,7 +16,7 @@ def get_output(request):
     port = request.matchdict["port"]
     socket = request.registry.sockets[int(port)]
     array = socket.recv_json()
-    print("ZMQ receiver received", array)
+    print("ZMQ receiver received")
     return array
 
 

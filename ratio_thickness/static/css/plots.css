@@ -13,3 +13,8 @@ path.line {
     fill: none;
     stroke: darkblue;
 }
+
+rect.mask {
+    fill: yellow;
+    opacity: 0.15;
+}

@@ -26,7 +26,6 @@ d3.chart.profile = ->
     chart = (selection) ->
         selection.each (data) ->
 
-            console.log "profile data", data
             #fix colors
             color
                 .domain (d3.keys data).filter (key) ->
@@ -44,8 +43,6 @@ d3.chart.profile = ->
                                 value: d
                             }
                     }
-
-            console.log layout
 
             #update scales
             x_scale
@@ -73,8 +70,38 @@ d3.chart.profile = ->
             g = svg.select "g"
                 .attr "transform", "translate(#{margin.left}, #{margin.top})"
 
+            mask_data = [
+                data.mask.indexOf(true),
+                data.mask.lastIndexOf(true)
+            ]
+
+            mask_data = [
+                {
+                    x: mask_data[0]
+                    width: mask_data[1] - mask_data[0]
+                }
+            ]
+
+            mask = g.selectAll ".mask"
+                .data mask_data
+
+            mask
+                .enter()
+                .append "rect"
+                .classed "mask", true
+                .attr "x", (d) -> x_scale(d.x)
+                .attr "y", 0
+                .attr "width", (d) -> x_scale(d.width)
+                .attr "height", y_scale.range()[0]
+
+            mask
+                .exit()
+                .remove()
+
             profile = g.selectAll ".profile"
                 .data layout
+
+            profile
                 .enter()
                 .append "g"
                 .classed "profile", true

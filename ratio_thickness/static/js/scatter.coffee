@@ -59,9 +59,11 @@ d3.chart.scatter = ->
                 .attr "transform", "translate(#{margin.left}, #{margin.top})"
 
             #update the line path
-            g_circles
+            circles = g_circles
                 .selectAll ".circle"
                 .data(data)
+
+            circles
                 .enter()
                 .append "circle"
                 .classed "circle", true
@@ -69,6 +71,10 @@ d3.chart.scatter = ->
                 .attr "r", 3
                 .attr "cx", (d) -> x_scale(d.x)
                 .attr "cy", (d) -> y_scale(d.y)
+
+            circles
+                .exit()
+                .remove()
 
             #update axes
             g.select ".x.axis"
