@@ -4,8 +4,7 @@
 <h2>Choose dataset</h2>
 <div class="row">
     <div class="col-md-4">
-        <select id="select-dataset" style="width:100%">
-        </select>
+        <input type="hidden" id="select-dataset" style="width:100%" data-placeholder="choose a dataset" />
     </div>
 </div>
 

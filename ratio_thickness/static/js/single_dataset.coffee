@@ -98,11 +98,10 @@ jQuery ->
                 .data [ratio_df_data]
                 .call ratio_df
 
-    #$("#select-dataset").change ->
-        #file = $(this).val()
-        #name = $(this).text()
-        #console.log "select dataset", file, name
-        #window.loadimages(name, file)
+    $("#select-dataset").change ->
+        file = $(this).val()
+        name = $(".select2-chosen").text()
+        window.loadimages(name, file)
 
     jQuery.ajax {
         url: "/datasets"
