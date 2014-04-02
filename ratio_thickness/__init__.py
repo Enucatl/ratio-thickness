@@ -14,6 +14,7 @@ def main(global_config, **settings):
     config.add_route('pipeline', '/pipeline')
     config.add_route('single_dataset', '/single_dataset')
     config.add_route('aggregated', '/aggregated')
+    config.add_route('aggregatedoutput', '/aggregatedoutput')
     config.scan()
     config.include("ratio_thickness.pipeline.include_pipeline")
     return config.make_wsgi_app()

@@ -65,6 +65,34 @@ def get_output(request):
     return array
 
 
+@view_config(route_name='aggregatedoutput', renderer='json')
+def get_aggregated_output(request):
+    averages = []
+    context = zmq.Context()
+    unused_port = 40000
+    port = 40001
+    unused_socket = context.socket(zmq.PULL)
+    socket = context.socket(zmq.PULL)
+    unused_socket.connect("tcp://127.0.0.1:{0}".format(unused_port))
+    socket.connect("tcp://127.0.0.1:{0}".format(port))
+    for name, filename in request.json_body["files"]:
+        packet = pypes.packet.Packet()
+        packet.set("file_name", filename)
+        request.registry.pipeline.send(packet)
+        unused_socket.recv_json()
+        array = socket.recv_json()
+        averages.extend({
+            "name": name,
+            "abs": array[0][i],
+            "df": array[1][i],
+            "ratio": array[2][i],
+        } for i in range(array.shape[1]))
+    print(averages)
+    unused_socket.close()
+    socket.close()
+    return averages
+
+
 @view_config(route_name='home', renderer='templates/index.mako')
 def get_home(request):
     return {"title": "Home"}
