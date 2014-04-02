@@ -61,7 +61,6 @@ def get_output(request):
     socket = context.socket(zmq.PULL)
     socket.connect("tcp://127.0.0.1:{0}".format(port))
     array = socket.recv_json()
-    print("ZMQ receiver received")
     socket.close()
     return array
 
@@ -77,11 +76,6 @@ def get_reconstruction(request):
     return {"title": "Single dataset analysis"}
 
 
-@view_config(route_name='segmentation', renderer='templates/segmentation.mako')
+@view_config(route_name='aggregated', renderer='templates/aggregated.mako')
 def get_segmentation(request):
-    return {"title": "Segmentation"}
-
-
-@view_config(route_name='average', renderer='templates/average.mako')
-def get_average(request):
-    return {"title": "Average"}
+    return {"title": "Aggregated results"}

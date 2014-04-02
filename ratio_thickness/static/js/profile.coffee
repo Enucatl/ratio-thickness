@@ -115,7 +115,7 @@ d3.chart.profile = ->
                 .attr "height", y_scale.range()[0]
 
             #update lines
-            profile = g.selectAll ".line"
+            g.selectAll ".line"
                 .data (d) -> d
                 .attr "d", (d) -> line(d.values)
                 .style "stroke", (d) -> color d.name 

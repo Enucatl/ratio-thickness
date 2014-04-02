@@ -39,7 +39,7 @@
 </div>
 
 <p><a class="btn btn-primary btn-lg" role="button">
-        Continue with the segmentation &raquo;</a></p>
+        Continue with the aggregated results &raquo;</a></p>
 
 <%block name="extra_js">
 

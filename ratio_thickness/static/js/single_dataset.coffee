@@ -74,7 +74,7 @@ jQuery ->
             width = $(placeholder).width()
             ratio_abs.width width
             ratio_abs.x_scale().domain [0, 1]
-            ratio_abs.y_scale().domain [1, 5]
+            ratio_abs.y_scale().domain [0, 5]
             ratio_abs.x_title "transmission"
             ratio_abs.y_title "log ratio"
             ratio_abs.height width * factor
@@ -89,7 +89,7 @@ jQuery ->
             ratio_df.width width
             ratio_df.height width * factor
             ratio_df.x_scale().domain [0, 1]
-            ratio_df.y_scale().domain [1, 5]
+            ratio_df.y_scale().domain [0, 5]
             ratio_df.x_title "dark field"
             ratio_df.y_title "log ratio"
             ratio_df_data = json[1].map (d, i) ->

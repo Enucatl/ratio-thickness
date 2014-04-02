@@ -41,9 +41,6 @@ d3.chart.scatter = ->
             g_enter = svg.enter()
                 .append "svg"
                 .append "g"
-
-            g_circles = g_enter.append "g"
-                .classed "circles", true
             g_enter.append "g"
                 .classed "x axis", true
                 .append "text"
@@ -61,6 +58,11 @@ d3.chart.scatter = ->
                 .attr "dy", ".71em"
                 .style "text-anchor", "end"
                 .text y_title
+            g_enter.selectAll ".circle"
+                .data (d) -> d
+                .enter()
+                .append "circle"
+                .classed "circle", true
 
             #update the dimensions
             svg
@@ -72,21 +74,11 @@ d3.chart.scatter = ->
                 .attr "transform", "translate(#{margin.left}, #{margin.top})"
 
             #update the line path
-            circles = g_circles
-                .selectAll ".circle"
-                .data(data)
-
-            circles
-                .enter()
-                .append "circle"
-                .classed "circle", true
+            g.selectAll ".circle"
+                .data (d) -> d
                 .attr "r", 3
                 .attr "cx", (d) -> x_scale(d.x)
                 .attr "cy", (d) -> y_scale(d.y)
-
-            circles
-                .exit()
-                .remove()
 
             #update axes
             g.select ".x.axis"

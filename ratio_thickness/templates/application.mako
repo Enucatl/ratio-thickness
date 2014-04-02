@@ -58,13 +58,13 @@
       <div class="row">
         <div class="col-md-4">
             <h2>Single dataset</h2>
-            <p>Where the phase stepping curves are analyzed</p>
+            <p>See the results for each single dataset</p>
             <p><a class="btn btn-default" href="/single_dataset" role="button">View details &raquo;</a></p>
         </div>
         <div class="col-md-4">
-            <h2>Segmentation</h2>
-            <p>Where the thickness of the sample is calculated</p>
-            <p><a class="btn btn-default" href="/segmentation" role="button">View details &raquo;</a></p>
+            <h2>Aggregated</h2>
+            <p>Compare the average log ratio for the different materials</p>
+            <p><a class="btn btn-default" href="/aggregated" role="button">View details &raquo;</a></p>
        </div>
         <div class="col-md-4">
             <h2>Results</h2>
