@@ -26,6 +26,7 @@ d3.chart.profile = ->
     chart = (selection) ->
         selection.each (data) ->
 
+            console.log "received data row", data.row
             #fix colors
             color
                 .domain (d3.keys data).filter (key) ->
@@ -60,6 +61,17 @@ d3.chart.profile = ->
             g_enter = svg.enter()
                 .append "svg"
                 .append "g"
+            g_enter.append "g"
+                .classed "x axis", true
+            g_enter.append "g"
+                .classed "y axis", true
+            g_enter.append "rect"
+                .classed "mask", true
+            g_enter.selectAll ".line"
+                .data (d) -> d
+                .enter()
+                .append "path"
+                .classed "line", true
 
             #update the dimensions
             svg
@@ -70,6 +82,7 @@ d3.chart.profile = ->
             g = svg.select "g"
                 .attr "transform", "translate(#{margin.left}, #{margin.top})"
 
+            #update mask
             mask_data = [
                 data.mask.indexOf(true),
                 data.mask.lastIndexOf(true)
@@ -82,41 +95,19 @@ d3.chart.profile = ->
                 }
             ]
 
-            mask = g.selectAll ".mask"
+            mask = g.select ".mask"
                 .data mask_data
-
-            mask
-                .enter()
-                .append "rect"
-                .classed "mask", true
                 .attr "x", (d) -> x_scale(d.x)
                 .attr "y", 0
                 .attr "width", (d) -> x_scale(d.width)
                 .attr "height", y_scale.range()[0]
 
-            mask
-                .exit()
-                .remove()
-
-            profile = g.selectAll ".profile"
-                .data layout
-
-            profile
-                .enter()
-                .append "g"
-                .classed "profile", true
-
-            profile.append "path"
-                .classed "line", true
+            #update lines
+            profile = g.selectAll ".line"
+                .data (d) -> d
                 .attr "d", (d) -> line(d.values)
                 .style "stroke", (d) -> color d.name 
-
-            profile.exit().remove()
-
-            g_enter.append "g"
-                .classed "x axis", true
-            g_enter.append "g"
-                .classed "y axis", true
+                .each (d) -> console.log d.values[0]
 
             #update axes
             g.select ".x.axis"
@@ -124,8 +115,6 @@ d3.chart.profile = ->
                 .call x_axis
             g.select ".y.axis"
                 .call y_axis
-
-            svg.exit().remove()
 
     chart.width = (value) ->
         if not arguments.length

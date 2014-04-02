@@ -20,7 +20,6 @@ jQuery ->
 
         factor = 0.618
         d3.json "/pipelineoutput/40000", (error, json) ->
-            console.log "inside d3.json"
             return console.warn error if error?
             d3.select "#abs-image"
                 .data [json]

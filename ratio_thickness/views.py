@@ -1,5 +1,6 @@
 from pyramid.view import view_config
 import pypes.packet
+import zmq
 
 
 @view_config(route_name='pipeline', renderer='json')
@@ -14,9 +15,12 @@ def start_pipeline(request):
 @view_config(route_name='pipelineoutput', renderer='json')
 def get_output(request):
     port = request.matchdict["port"]
-    socket = request.registry.sockets[int(port)]
+    context = zmq.Context()
+    socket = context.socket(zmq.PULL)
+    socket.connect("tcp://127.0.0.1:{0}".format(port))
     array = socket.recv_json()
     print("ZMQ receiver received")
+    socket.close()
     return array
 
 

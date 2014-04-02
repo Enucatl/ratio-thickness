@@ -78,9 +78,9 @@ d3.chart.image = ->
                 .on "mouseover", (d) ->
                     dispatch.line_over {
                         row: d.row,
-                        absorption: data[0][0]
-                        dark_field: data[1][0]
-                        mask: data[2][0]
+                        absorption: data[0][d.row]
+                        dark_field: data[1][d.row]
+                        mask: data[2][d.row]
                     }                  
                 .transition()
 

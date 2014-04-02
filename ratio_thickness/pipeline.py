@@ -129,15 +129,8 @@ def ratio_thickness_network():
 
 
 def include_pipeline(config):
-    config.registry.zmq_context = zmq.Context()
-    config.registry.sockets = {}
     network = ratio_thickness_network()
-    for port in range(40000, 40002):
-        socket = config.registry.zmq_context.socket(zmq.PULL)
-        socket.connect("tcp://127.0.0.1:{0}".format(port))
-        config.registry.sockets[port] = socket
     config.registry.pipeline = pypes.pipeline.Dataflow(network, n=4)
-    log.info("Pyramid include pipeline done")
 
 
 if __name__ == '__main__':
