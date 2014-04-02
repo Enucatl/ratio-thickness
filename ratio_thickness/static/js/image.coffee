@@ -23,15 +23,29 @@ d3.chart.image = ->
             height = pixel_height * dy
             width = pixel_width * dx
 
+            layout = []
+            for i in [0..(dx - 1)]
+                for j in [0..(dy - 1)]
+                    layout.push {
+                        col: i
+                        row: j
+                        value: this_data[j][i]
+                    }
+
             #select the svg if it exists
             svg = d3.select this
                 .selectAll "svg"
-                .data [this_data]
+                .data [layout]
 
             #otherwise create the skeletal chart
             g_enter = svg.enter()
                 .append "svg"
                 .append "g"
+            g_enter.selectAll ".pixel"
+                .data (d) -> d
+                .enter()
+                .append "rect"
+                .classed "pixel", true
 
             #update the dimensions
             svg
@@ -55,21 +69,11 @@ d3.chart.image = ->
                 .domain [min_scale, max_scale] 
                 .range ["white", "black"]
 
-            layout = []
-            for i in [0..(dx - 1)]
-                for j in [0..(dy - 1)]
-                    layout.push {
-                        col: i
-                        row: j
-                        value: this_data[j][i]
-                    }
 
-            rectangles = g_enter.selectAll "rect"
-                .data layout
+            g = svg.select "g"
 
-            rectangles.enter()
-                .append "rect"
-                .classed "image-pixels", true
+            rectangles = g.selectAll "rect"
+                .data (d) -> d
                 .attr "x", (d) -> x(d.col)
                 .attr "y", (d) -> y(d.row)
                 .attr "height", pixel_height
@@ -86,12 +90,7 @@ d3.chart.image = ->
                     dispatch.line_out {
                         row: d.row
                     }
-                .transition()
 
-            rectangles.exit()
-                .transition()
-                .remove()
-            
     chart.pixel_width = (value) ->
         if not arguments.length
             return pixel_width

@@ -134,12 +134,18 @@ def include_pipeline(config):
 
 
 if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser(__doc__)
+    parser.add_argument(
+        "file", nargs="?",
+        default="static/data/S00918_S00957.hdf5")
+    args = parser.parse_args()
     config_dictionary['handlers']['default']['level'] = 'DEBUG'
     config_dictionary['loggers']['']['level'] = 'DEBUG'
     logging.config.dictConfig(config_dictionary)
     pipeline = pypes.pipeline.Dataflow(ratio_thickness_network(), n=3)
     packet = pypes.packet.Packet()
-    packet.set("file_name", "static/data/S00918_S00957.hdf5")
+    packet.set("file_name", args.file)
     context = zmq.Context()
     sockets = []
     for i in range(40000, 40002):
