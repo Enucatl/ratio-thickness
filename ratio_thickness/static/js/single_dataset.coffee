@@ -20,6 +20,7 @@ jQuery ->
 
         factor = 0.618
         d3.json "/pipelineoutput/40000", (error, json) ->
+            console.log "inside d3.json"
             return console.warn error if error?
             d3.select "#abs-image"
                 .data [json]
@@ -41,6 +42,17 @@ jQuery ->
             d3.select "#profiles"
                 .data [profile_data]
                 .call profiles
+
+            abs_image.on "line_over", (line) ->
+                d3.select "#profiles"
+                    .data [line]
+                    .call profiles
+
+            df_image.on "line_over", (line) ->
+                d3.select "#profiles"
+                    .data [line]
+                    .call profiles
+
 
         ratio_pos = d3.chart.scatter()
         ratio_abs = d3.chart.scatter()

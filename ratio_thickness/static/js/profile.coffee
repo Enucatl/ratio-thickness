@@ -111,6 +111,8 @@ d3.chart.profile = ->
                 .attr "d", (d) -> line(d.values)
                 .style "stroke", (d) -> color d.name 
 
+            profile.exit().remove()
+
             g_enter.append "g"
                 .classed "x axis", true
             g_enter.append "g"
@@ -122,6 +124,8 @@ d3.chart.profile = ->
                 .call x_axis
             g.select ".y.axis"
                 .call y_axis
+
+            svg.exit().remove()
 
     chart.width = (value) ->
         if not arguments.length

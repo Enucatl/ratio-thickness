@@ -4,16 +4,15 @@
 <h2>Reconstruction</h2>
 
 <div class="row" id="reconstruction-placeholder">
-    <div class="col-md-6" id="abs-image">
-        Absorption
+    <div class="col-md-6" id="images">
+        <div class="col-md-12" id="abs-image">
+            Absorption
+        </div>
+        <div class="col-md-12" id="df-image">
+            Dark field
+        </div>
     </div>
-    <div class="col-md-6" id="df-image">
-        Dark field
-    </div>
-</div>
-
-<div class="row" id="reconstruction-profiles-placeholder">
-    <div class="col-md-12" id="profiles">
+    <div class="col-md-6" id="profiles">
         Profiles
     </div>
 </div>

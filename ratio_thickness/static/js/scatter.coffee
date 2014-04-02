@@ -71,6 +71,7 @@ d3.chart.scatter = ->
                 .attr "r", 3
                 .attr "cx", (d) -> x_scale(d.x)
                 .attr "cy", (d) -> y_scale(d.y)
+                .attr "id", (d, i) -> i
 
             circles
                 .exit()

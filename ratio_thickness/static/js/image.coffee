@@ -8,6 +8,7 @@ d3.chart.image = ->
     x = d3.scale.ordinal()
     y = d3.scale.ordinal()
     color = d3.scale.linear()
+    dispatch = d3.dispatch "line_over"
 
     chart = (selection) ->
         selection.each (data) ->
@@ -75,16 +76,12 @@ d3.chart.image = ->
                 .attr "width", pixel_width
                 .attr "fill", (d) -> color(d.value)
                 .on "mouseover", (d) ->
-                    #id = $(this).parents("svg").attr("id")
-                    #profile_id = "##{id}-profile"
-                    #element = d3.select(profile_id)
-                    #if element?
-                        #profiles = $.grep window.profiles, (e) -> e.id == profile_id 
-                        #if profiles?
-                            #element
-                                #.datum data[d.row]
-                                #.call profiles[0].profile
-                    null
+                    dispatch.line_over {
+                        row: d.row,
+                        absorption: data[0][0]
+                        dark_field: data[1][0]
+                        mask: data[2][0]
+                    }                  
                 .transition()
 
             rectangles.exit()
@@ -126,5 +123,7 @@ d3.chart.image = ->
             return color
         color = value
         chart
+
+    d3.rebind chart, dispatch, "on"
 
     chart
