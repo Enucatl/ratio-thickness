@@ -26,7 +26,6 @@ d3.chart.profile = ->
     chart = (selection) ->
         selection.each (data) ->
 
-            console.log "received data row", data.row
             #fix colors
             color
                 .domain (d3.keys data).filter (key) ->
@@ -63,8 +62,21 @@ d3.chart.profile = ->
                 .append "g"
             g_enter.append "g"
                 .classed "x axis", true
+                .append "text"
+                .classed "label", true
+                .attr "x", width - margin.right - margin.left
+                .attr "y", -6
+                .style "text-anchor", "end"
+                .text "pixel"
             g_enter.append "g"
                 .classed "y axis", true
+                .append "text"
+                .classed "label", true
+                .attr "y", 6
+                .attr "transform", "rotate(-90)"
+                .attr "dy", ".71em"
+                .style "text-anchor", "end"
+                .text "transmission / dark field"
             g_enter.append "rect"
                 .classed "mask", true
             g_enter.selectAll ".line"
@@ -107,7 +119,6 @@ d3.chart.profile = ->
                 .data (d) -> d
                 .attr "d", (d) -> line(d.values)
                 .style "stroke", (d) -> color d.name 
-                .each (d) -> console.log d.values[0]
 
             #update axes
             g.select ".x.axis"

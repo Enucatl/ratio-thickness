@@ -18,3 +18,11 @@ rect.mask {
     fill: yellow;
     opacity: 0.15;
 }
+
+circle {
+    fill: darkblue;
+}
+
+circle.highlighted {
+    fill: green;
+}

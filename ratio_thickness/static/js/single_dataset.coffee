@@ -42,16 +42,11 @@ jQuery ->
                 .data [profile_data]
                 .call profiles
 
-            abs_image.on "line_over", (line) ->
-                d3.select "#profiles"
-                    .data [line]
-                    .call profiles
-
-            df_image.on "line_over", (line) ->
-                d3.select "#profiles"
-                    .data [line]
-                    .call profiles
-
+            for image in [abs_image, df_image]
+                image.on "line_over", (line) ->
+                    d3.select "#profiles"
+                        .data [line]
+                        .call profiles
 
         ratio_pos = d3.chart.scatter()
         ratio_abs = d3.chart.scatter()

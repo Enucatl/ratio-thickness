@@ -46,8 +46,21 @@ d3.chart.scatter = ->
                 .classed "circles", true
             g_enter.append "g"
                 .classed "x axis", true
+                .append "text"
+                .classed "label", true
+                .attr "x", width - margin.right - margin.left
+                .attr "y", -6
+                .style "text-anchor", "end"
+                .text x_title
             g_enter.append "g"
                 .classed "y axis", true
+                .append "text"
+                .classed "label", true
+                .attr "y", 6
+                .attr "transform", "rotate(-90)"
+                .attr "dy", ".71em"
+                .style "text-anchor", "end"
+                .text y_title
 
             #update the dimensions
             svg
@@ -67,11 +80,9 @@ d3.chart.scatter = ->
                 .enter()
                 .append "circle"
                 .classed "circle", true
-                .style "fill", "darkblue"
                 .attr "r", 3
                 .attr "cx", (d) -> x_scale(d.x)
                 .attr "cy", (d) -> y_scale(d.y)
-                .attr "id", (d, i) -> i
 
             circles
                 .exit()
@@ -81,22 +92,9 @@ d3.chart.scatter = ->
             g.select ".x.axis"
                 .attr "transform", "translate(0, #{y_scale.range()[0]})"
                 .call x_axis
-                .append "text"
-                .classed "label", true
-                .attr "x", width - margin.right - margin.left
-                .attr "y", -6
-                .style "text-anchor", "end"
-                .text x_title
 
             g.select ".y.axis"
                 .call y_axis
-                .append "text"
-                .classed "label", true
-                .attr "y", 6
-                .attr "transform", "rotate(-90)"
-                .attr "dy", ".71em"
-                .style "text-anchor", "end"
-                .text y_title
 
     chart.width = (value) ->
         if not arguments.length

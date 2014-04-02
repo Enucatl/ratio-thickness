@@ -8,7 +8,7 @@ d3.chart.image = ->
     x = d3.scale.ordinal()
     y = d3.scale.ordinal()
     color = d3.scale.linear()
-    dispatch = d3.dispatch "line_over"
+    dispatch = d3.dispatch "line_over", "line_out"
 
     chart = (selection) ->
         selection.each (data) ->
@@ -82,6 +82,10 @@ d3.chart.image = ->
                         dark_field: data[1][d.row]
                         mask: data[2][d.row]
                     }                  
+                .on "mouseout", (d) ->
+                    dispatch.line_out {
+                        row: d.row
+                    }
                 .transition()
 
             rectangles.exit()
