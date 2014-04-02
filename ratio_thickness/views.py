@@ -1,6 +1,48 @@
 from pyramid.view import view_config
 import pypes.packet
 import zmq
+import os
+
+
+@view_config(route_name='datasets', renderer='json')
+def get_datasets(request):
+    folder = "ratio_thickness/static/data/"
+    datasets = [
+        {
+            "name": "PMMA",
+            "file": "S00638_S00677.hdf5",
+            "a (mm)": 50,
+            "b (mm)": 6.3,
+        },
+        {
+            "name": "Plexiglass",
+            "file": "S00678_S00717.hdf5",
+            "a (mm)": 50,
+            "b (mm)": 9.40,
+        },
+        {
+            "name": "Aluminium",
+            "file": "S00718_S00757.hdf5",
+            "a (mm)": 30.50,
+            "b (mm)": 1,
+        },
+        {
+            "name": "Polystyrene",
+            "file": "S00758_S00797.hdf5",
+            "a (mm)": 62,
+            "b (mm)": 20,
+        },
+        {
+            "name": "Carbon fibers",
+            "file": "S00918_S00957.hdf5",
+            "a (mm)": 49.35,
+            "b (mm)": 4.1,
+        },
+    ]
+    for dataset in datasets:
+        dataset["file"] = os.path.join(
+            folder, dataset["file"])
+    return datasets
 
 
 @view_config(route_name='pipeline', renderer='json')

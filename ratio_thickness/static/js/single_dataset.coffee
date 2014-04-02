@@ -1,5 +1,7 @@
 jQuery ->
-    window.loadimages = (filename) ->
+
+    window.loadimages = (title, filename) ->
+        $("#page-title").text("Dataset analysis: #{title}")
         #send file name to the pipeline
         jQuery.ajax {
             url: "/pipeline"
@@ -95,3 +97,17 @@ jQuery ->
             d3.select placeholder
                 .data [ratio_df_data]
                 .call ratio_df
+
+    #$("#select-dataset").change ->
+        #file = $(this).val()
+        #name = $(this).text()
+        #console.log "select dataset", file, name
+        #window.loadimages(name, file)
+
+    jQuery.ajax {
+        url: "/datasets"
+        dataType: "json"
+        success: (data, s, xhr) ->
+            data = data[4]
+            window.loadimages(data.name, data.file)
+    }

@@ -1,5 +1,13 @@
 <%inherit file="application.mako"/>
-<h1>Single dataset data analysis</h1>
+<h1 id="page-title">Dataset analysis</h1>
+
+<h2>Choose dataset</h2>
+<div class="row">
+    <div class="col-md-4">
+        <select id="select-dataset" style="width:100%">
+        </select>
+    </div>
+</div>
 
 <h2>Reconstruction</h2>
 
@@ -35,6 +43,7 @@
         Continue with the segmentation &raquo;</a></p>
 
 <%block name="extra_js">
+
     <script
         src="${assetmutator_url('ratio_thickness:static/js/profile.coffee')}"
         type="text/javascript">
@@ -55,10 +64,9 @@
         type="text/javascript">
     </script>
 
-    <script type="text/javascript">
-        $(document).ready(function() {
-            var filename = "ratio_thickness/static/data/S00918_S00957.hdf5"
-            window.loadimages(filename);
-        });
+    <script
+        src="${assetmutator_url('ratio_thickness:static/js/select_dataset.coffee')}"
+        type="text/javascript">
     </script>
+
 </%block>
