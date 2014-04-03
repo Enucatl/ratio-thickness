@@ -75,18 +75,16 @@ def get_aggregated_output(request):
     socket = context.socket(zmq.PULL)
     unused_socket.connect("tcp://127.0.0.1:{0}".format(unused_port))
     socket.connect("tcp://127.0.0.1:{0}".format(port))
-    for name, filename in request.json_body["files"]:
+    for dataset in request.json_body["datasets"]:
         packet = pypes.packet.Packet()
-        packet.set("file_name", filename)
+        packet.set("file_name", dataset["file"])
         request.registry.pipeline.send(packet)
         unused_socket.recv_json()
         array = socket.recv_json()
-        averages.extend({
-            "name": name,
-            "abs": array[0][i],
-            "df": array[1][i],
-            "ratio": array[2][i],
-        } for i in range(array.shape[1]))
+        averages.append({
+            "name": dataset["name"],
+            "values": array
+        })
     print(averages)
     unused_socket.close()
     socket.close()
