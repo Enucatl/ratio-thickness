@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Starter Template for Bootstrap</title>
+    <title>Log ratio analysis</title>
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
@@ -15,8 +15,14 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.4.6/select2.css">
     ##<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.4.6/select2-bootstrap.css">
 
+    ##mathjax
+    <script type="text/javascript"
+  src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
     <!-- Custom styles for this template -->
     <link href="/static/css/starter-template.css" rel="stylesheet">
+    <link href="/static/css/table.css" rel="stylesheet">
     <link href="/static/css/plots.css" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy this line! -->
@@ -56,21 +62,17 @@
     <div class="container">
       <!-- Example row of columns -->
       <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-6">
             <h2>Single dataset</h2>
-            <p>See the results for each single dataset</p>
+            <p>See the results for each single dataset.</p>
             <p><a class="btn btn-default" href="/single_dataset" role="button">View details &raquo;</a></p>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
             <h2>Aggregated</h2>
-            <p>Compare the average log ratio for the different materials</p>
+            <p>Compare the average log ratio for the different materials in
+                one plot.</p>
             <p><a class="btn btn-default" href="/aggregated" role="button">View details &raquo;</a></p>
        </div>
-        <div class="col-md-4">
-            <h2>Results</h2>
-            <p>Where the log ratio is shown</p>
-          <p><a class="btn btn-default" href="/average" role="button">View details &raquo;</a></p>
-        </div>
       </div>
 
       <hr>

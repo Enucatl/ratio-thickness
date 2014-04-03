@@ -75,7 +75,7 @@ def get_aggregated_output(request):
     socket = context.socket(zmq.PULL)
     unused_socket.connect("tcp://127.0.0.1:{0}".format(unused_port))
     socket.connect("tcp://127.0.0.1:{0}".format(port))
-    for dataset in request.json_body["datasets"]:
+    for dataset in request.json_body:
         packet = pypes.packet.Packet()
         packet.set("file_name", dataset["file"])
         request.registry.pipeline.send(packet)
@@ -85,7 +85,6 @@ def get_aggregated_output(request):
             "name": dataset["name"],
             "values": array
         })
-    print(averages)
     unused_socket.close()
     socket.close()
     return averages

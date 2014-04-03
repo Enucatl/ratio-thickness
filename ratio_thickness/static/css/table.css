@@ -1,0 +1,18 @@
+table {
+    width:100%;
+}
+
+th {
+	font-weight: normal;
+    color: #039;
+	padding: 10px 8px;
+	border-bottom: 2px solid black;
+}
+
+td {
+	padding: 9px 8px 0px 8px;
+}
+
+tbody tr:hover td {
+	color: #009;
+}
