@@ -27,26 +27,23 @@ d3.chart.profile = ->
         selection.each (data) ->
 
             #fix colors
-            color
-                .domain (d3.keys data).filter (key) ->
-                    key != "mask" and key != "row"
+            color.domain [0, 1]
 
             #convert to standard format
-            layout = color
-                .domain()
+            layout = color.domain()
                 .map (name) ->
                     {
                         name: name,
-                        values: data[name].map (d, i) ->
+                        values: data.values.map (d, i) ->
                             {
                                 col: i
-                                value: d
+                                value: d[name]
                             }
                     }
 
             #update scales
             x_scale
-                .domain [0, data["mask"].length]
+                .domain [0, data.values.length]
                 .range [0, width - margin.left - margin.right]
             y_scale
                 .range [height - margin.top - margin.bottom, 0]
@@ -95,9 +92,11 @@ d3.chart.profile = ->
                 .attr "transform", "translate(#{margin.left}, #{margin.top})"
 
             #update mask
+            mask_array = data.values.map (d) -> d[2]
+
             mask_data = [
-                data.mask.indexOf(true),
-                data.mask.lastIndexOf(true)
+                mask_array.indexOf(1),
+                mask_array.lastIndexOf(1)
             ]
 
             mask_data = [

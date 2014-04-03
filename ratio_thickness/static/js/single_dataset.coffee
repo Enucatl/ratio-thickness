@@ -14,9 +14,8 @@ jQuery ->
         }
 
         abs_image = d3.chart.image()
-            .key 0
         df_image = d3.chart.image()
-            .key 1
+            .color_value (d) -> d[1]
 
         profiles = d3.chart.profile()
 
@@ -32,9 +31,7 @@ jQuery ->
 
             profile_data = {
                 row: 0
-                absorption: json[0][0]
-                dark_field: json[1][0]
-                mask: json[2][0]
+                values: json[0]
             }
 
             width = $("#profiles").width()
@@ -50,53 +47,60 @@ jQuery ->
                         .data [line]
                         .call profiles
 
-        ratio_pos = d3.chart.scatter()
-        ratio_abs = d3.chart.scatter()
-        ratio_df = d3.chart.scatter()
         d3.json "/pipelineoutput/40001", (error, json) ->
             return console.warn error if error?
+            data = [{
+                name: title
+                values: json
+            }]
+            plots = [
+                { 
+                    placeholder: "#ratio-position"
+                    plot: d3.chart.scatter()
+                    x_scale_domain: [0, json.length]
+                    y_scale_domain: [0, 6]
+                    x_title: "row"
+                    y_title: "log ratio"
+                    x_value: (d, i) -> i
+                    y_value: (d, i) -> d[2]
+                },
+                { 
+                    placeholder: "#ratio-abs"
+                    plot: d3.chart.scatter()
+                    x_scale_domain: [0, 1]
+                    y_scale_domain: [0, 6]
+                    x_title: "transmission"
+                    y_title: "log ratio"
+                    x_value: (d, i) -> d[0]
+                    y_value: (d, i) -> d[2]
+                },
+                { 
+                    placeholder: "#ratio-df"
+                    plot: d3.chart.scatter()
+                    x_scale_domain: [0, 1]
+                    y_scale_domain: [0, 6]
+                    x_title: "dark field"
+                    y_title: "log ratio"
+                    x_value: (d, i) -> d[1]
+                    y_value: (d, i) -> d[2]
+                },
+            ]
 
-            ratio_pos.x_scale().domain [0, json[2].length]
-            ratio_pos.y_scale().domain [0, 6]
-            placeholder = "#ratio-position"
-            width = $(placeholder).width()
-            ratio_pos.width width
-            ratio_pos.x_title "row"
-            ratio_pos.y_title "log ratio"
-            ratio_pos.height width * factor
-            ratio_pos_data = json[2].map (d, i) ->
-                [i, d]
-            d3.select placeholder
-                .data [ratio_pos_data]
-                .call ratio_pos
-
-            placeholder = "#ratio-abs"
-            width = $(placeholder).width()
-            ratio_abs.width width
-            ratio_abs.x_scale().domain [0, 1]
-            ratio_abs.y_scale().domain [0, 5]
-            ratio_abs.x_title "transmission"
-            ratio_abs.y_title "log ratio"
-            ratio_abs.height width * factor
-            ratio_abs_data = json[0].map (d, i) ->
-                [d, json[2][i]]
-            d3.select placeholder
-                .data [ratio_abs_data]
-                .call ratio_abs
-
-            placeholder = "#ratio-df"
-            width = $(placeholder).width()
-            ratio_df.width width
-            ratio_df.height width * factor
-            ratio_df.x_scale().domain [0, 1]
-            ratio_df.y_scale().domain [0, 5]
-            ratio_df.x_title "dark field"
-            ratio_df.y_title "log ratio"
-            ratio_df_data = json[1].map (d, i) ->
-                [d, json[2][i]]
-            d3.select placeholder
-                .data [ratio_df_data]
-                .call ratio_df
+            for plot in plots
+                width = $(plot.placeholder).width()
+                plot.plot.width width
+                plot.plot.x_title plot.x_title
+                plot.plot.y_title plot.y_title
+                plot.plot.x_scale()
+                    .domain plot.x_scale_domain
+                plot.plot.y_scale()
+                    .domain plot.y_scale_domain
+                plot.plot.height width * factor
+                plot.plot.x_value plot.x_value
+                plot.plot.y_value plot.y_value
+                d3.select plot.placeholder
+                    .data [data]
+                    .call plot.plot
 
     $("#select-dataset").change ->
         file = $(this).val()

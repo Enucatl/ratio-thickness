@@ -4,19 +4,18 @@ if not d3.chart?
 d3.chart.image = ->
     pixel_height = 8
     pixel_width = 1
-    key = undefined
     x = d3.scale.ordinal()
     y = d3.scale.ordinal()
     color = d3.scale.linear()
+    color_value = (d) -> d[0]
     dispatch = d3.dispatch "line_over", "line_out"
 
     chart = (selection) ->
         selection.each (data) ->
 
             #get the right key from the object
-            this_data = data[key]
-            dx = this_data[0].length
-            dy = this_data.length
+            dx = data[0].length
+            dy = data.length
 
             pixel_height = 8
             pixel_width = 1
@@ -29,7 +28,7 @@ d3.chart.image = ->
                     layout.push {
                         col: i
                         row: j
-                        value: this_data[j][i]
+                        value: color_value data[j][i]
                     }
 
             #select the svg if it exists
@@ -61,7 +60,7 @@ d3.chart.image = ->
                 .rangePoints [height - pixel_height, 0], 0
 
             #fix color scale
-            flattened = this_data.reduce (a, b) -> a.concat b
+            flattened = layout.map (d) -> d.value
             sorted = flattened.sort d3.ascending
             min_scale = d3.quantile sorted, 0.05
             max_scale = d3.quantile sorted, 0.95
@@ -82,9 +81,7 @@ d3.chart.image = ->
                 .on "mouseover", (d) ->
                     dispatch.line_over {
                         row: d.row,
-                        absorption: data[0][d.row]
-                        dark_field: data[1][d.row]
-                        mask: data[2][d.row]
+                        values: data[d.row]
                     }                  
                 .on "mouseout", (d) ->
                     dispatch.line_out {
@@ -125,6 +122,12 @@ d3.chart.image = ->
         if not arguments.length
             return color
         color = value
+        chart
+
+    chart.color_value = (value) ->
+        if not arguments.length
+            return color_value
+        color_value = value
         chart
 
     d3.rebind chart, dispatch, "on"

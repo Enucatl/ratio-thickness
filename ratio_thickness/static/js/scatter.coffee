@@ -9,6 +9,7 @@ d3.chart.scatter = ->
     y_value = (d, i) -> d[1]
     x_scale = d3.scale.linear()
     y_scale = d3.scale.linear()
+    color_scale = d3.scale.category20()
     x_axis = d3.svg.axis()
         .scale x_scale 
         .orient "bottom"
@@ -19,12 +20,26 @@ d3.chart.scatter = ->
     y_title = undefined
     chart = (selection) ->
         selection.each (data) ->
+                 
+            #get unique color names
+            color_names = (data.map (d) -> d.name).filter (d, i, self) ->
+                self.indexOf d == i
+
+            color_scale.domain color_names
+
             #convert to standard format
             data = data.map (d, i) ->
                 {
-                    x: x_value.call(data, d, i),
-                    y: y_value.call(data, d, i)
+                    values: d.values.map (e, j) ->
+                        {
+                            name: d.name
+                            x: x_value.call(d.values, e, j),
+                            y: y_value.call(d.values, e, j)
+                        }
                 }
+
+            #flatten the structure
+            data = (data.map (d) -> d.values).reduce (a, b) -> a.concat b
 
             #update scales
             x_scale
@@ -58,11 +73,10 @@ d3.chart.scatter = ->
                 .attr "dy", ".71em"
                 .style "text-anchor", "end"
                 .text y_title
-            g_enter.selectAll ".circle"
-                .data (d) -> d
-                .enter()
-                .append "circle"
-                .classed "circle", true
+            g_enter.append "g"
+                .classed "circles", true
+            g_enter.append "g"
+                .classed "legends", true
 
             #update the dimensions
             svg
@@ -73,12 +87,58 @@ d3.chart.scatter = ->
             g = svg.select "g"
                 .attr "transform", "translate(#{margin.left}, #{margin.top})"
 
-            #update the line path
-            g.selectAll ".circle"
+            #update circles
+            circles = g.select ".circles"
+                .selectAll ".circle"
                 .data (d) -> d
+
+            circles
+                .enter()
+                .append "circle"
+                .classed "circle", true
+
+            circles
                 .attr "r", 3
                 .attr "cx", (d) -> x_scale(d.x)
                 .attr "cy", (d) -> y_scale(d.y)
+                .style "fill", (d) -> color_scale(d.name)
+
+            circles
+                .exit()
+                .remove()
+
+            #update legend
+            legends = g.select ".legends"
+                .selectAll ".legend"
+                .data color_scale.domain()
+
+            l_enter = legends
+                .enter()
+                .append "g"
+                .classed "legend", true
+
+            l_enter.append "rect"
+            l_enter.append "text"
+
+            legends
+                .attr "transform", (d, i) -> "translate(0, #{20 * i})"
+
+            legends.selectAll "rect"
+                .attr "x", width - margin.right - margin.left - 18
+                .attr "width", 18
+                .attr "height", 18
+                .style "fill", color_scale
+
+            legends.selectAll "text"
+                .attr "x", width - margin.right - margin.left - 24
+                .attr "y", 9
+                .attr "dy", ".35em"
+                .style "text-anchor", "end"
+                .text (d) -> d
+
+            legends
+                .exit()
+                .remove()
 
             #update axes
             g.select ".x.axis"
@@ -106,13 +166,13 @@ d3.chart.scatter = ->
         margin = value
         chart
 
-    chart.x = (value) ->
+    chart.x_value = (value) ->
         if not arguments.length
             return x_value
         x_value = value
         chart
 
-    chart.y = (value) ->
+    chart.y_value = (value) ->
         if not arguments.length
             return y_value
         y_value = value

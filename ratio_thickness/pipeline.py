@@ -19,10 +19,6 @@ from pypes.plugins.nm_function import NMFunction
 from r_distribution.feature_segmentation import MinimumThresholdSegmentation
 
 
-def merge_numpy_arrays(*args):
-    return ([a[...].tolist() for a in args],)
-
-
 def multiple_outputs_reader(m=2):
     "repeat the output of the reader m times"
     reader = Hdf5ReadDataset()
@@ -69,7 +65,9 @@ def ratio_thickness_network():
     feature_segmentation = MinimumThresholdSegmentation()
     feature_segmentation_out = NMFunction(m=4)
     reader_outputs = NMFunction(n=3)
-    reader_outputs.set_parameter("function", merge_numpy_arrays)
+    reader_outputs.set_parameter(
+        "function",
+        lambda *args: (np.dstack(args).tolist(),))
     reader_replier = ZmqPush(port=40000)
     log_ratio = NMFunction(n=2)
     log_ratio.set_parameter(
@@ -80,7 +78,9 @@ def ratio_thickness_network():
     average_r = average()
     average_outputs = NMFunction(n=3)
     average_replier = ZmqPush(port=40001)
-    average_outputs.set_parameter("function", merge_numpy_arrays)
+    average_outputs.set_parameter(
+        "function",
+        lambda *args: (np.vstack(args).T.tolist(),))
     network = {
         in1out2: {
             abs_reader: ("out", "in"),
