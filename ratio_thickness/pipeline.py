@@ -53,7 +53,7 @@ def datasets(*_):
 
 def log_function(df, a):
     "logarithm ratio"
-    return (np.log(df)/np.log(a),)
+    return (np.log(a)/np.log(df),)
 
 
 def ratio_thickness_network():

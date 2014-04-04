@@ -38,7 +38,7 @@ jQuery ->
                     placeholder: "#ratio-abs"
                     plot: d3.chart.scatter()
                     x_scale_domain: [0, 1]
-                    y_scale_domain: [0, 6]
+                    y_scale_domain: [0, 1]
                     x_title: "transmission"
                     y_title: "log ratio"
                     x_value: (d, i) -> d[0]
@@ -48,7 +48,7 @@ jQuery ->
                     placeholder: "#ratio-df"
                     plot: d3.chart.scatter()
                     x_scale_domain: [0, 1]
-                    y_scale_domain: [0, 6]
+                    y_scale_domain: [0, 1]
                     x_title: "dark field"
                     y_title: "log ratio"
                     x_value: (d, i) -> d[1]

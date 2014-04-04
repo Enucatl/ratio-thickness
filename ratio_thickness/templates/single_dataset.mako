@@ -41,7 +41,7 @@
     </p>
     <p>
         The log ratio is calculated as:
-        $$\frac{\log(\text{dark field})}{\log(\text{absorption})}$$
+        $$\frac{\log(\text{absorption})}{\log(\text{dark field})}$$
     </p>
     <p>
 
