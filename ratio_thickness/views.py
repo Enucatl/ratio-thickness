@@ -1,47 +1,96 @@
 from pyramid.view import view_config
 import pypes.packet
 import zmq
-import os
 
 
 @view_config(route_name='datasets', renderer='json')
 def get_datasets(request):
-    folder = "ratio_thickness/static/data/"
     datasets = [
         {
             "name": "PMMA",
-            "file": "S00638_S00677.hdf5",
+            "file": "ratio_thickness/static/data/S00638_S00677.hdf5",
             "a (mm)": 50,
             "b (mm)": 6.3,
+            "simulated": False,
         },
         {
             "name": "Plexiglass",
-            "file": "S00678_S00717.hdf5",
+            "file": "ratio_thickness/static/data/S00678_S00717.hdf5",
             "a (mm)": 50,
             "b (mm)": 9.40,
+            "simulated": False,
         },
         {
             "name": "Aluminium",
-            "file": "S00718_S00757.hdf5",
+            "file": "ratio_thickness/static/data/S00718_S00757.hdf5",
             "a (mm)": 30.50,
             "b (mm)": 1,
+            "simulated": False,
         },
         {
             "name": "Polystyrene",
-            "file": "S00758_S00797.hdf5",
+            "file": "ratio_thickness/static/data/S00758_S00797.hdf5",
             "a (mm)": 62,
             "b (mm)": 20,
+            "simulated": False,
         },
         {
             "name": "Carbon fibers",
-            "file": "S00918_S00957.hdf5",
+            "file": "ratio_thickness/static/data/S00918_S00957.hdf5",
             "a (mm)": 49.35,
             "b (mm)": 4.1,
+            "simulated": False,
+        },
+        {
+            "name": "Sim. Ag",
+            "file": "ratio_thickness/static/sim_data/Ag.hdf5",
+            "b (mm)": 0.1,
+            "a (mm)": 100,
+            "simulated": True,
+        },
+        {
+            "name": "Sim. Al",
+            "file": "ratio_thickness/static/sim_data/Al.hdf5",
+            "b (mm)": 0.1,
+            "a (mm)": 100,
+            "simulated": True,
+        },
+        {
+            "name": "Sim. Au",
+            "file": "ratio_thickness/static/sim_data/Au.hdf5",
+            "b (mm)": 0.1,
+            "a (mm)": 100,
+            "simulated": True,
+        },
+        {
+            "name": "Sim. C",
+            "file": "ratio_thickness/static/sim_data/C.hdf5",
+            "b (mm)": 0.1,
+            "a (mm)": 100,
+            "simulated": True,
+        },
+        {
+            "name": "Sim. Cu",
+            "file": "ratio_thickness/static/sim_data/Cu.hdf5",
+            "b (mm)": 0.1,
+            "a (mm)": 100,
+            "simulated": True,
+        },
+        {
+            "name": "Sim. Fe",
+            "file": "ratio_thickness/static/sim_data/Fe.hdf5",
+            "b (mm)": 0.1,
+            "a (mm)": 100,
+            "simulated": True,
+        },
+        {
+            "name": "Sim. Si",
+            "file": "ratio_thickness/static/sim_data/Si.hdf5",
+            "b (mm)": 0.1,
+            "a (mm)": 100,
+            "simulated": True,
         },
     ]
-    for dataset in datasets:
-        dataset["file"] = os.path.join(
-            folder, dataset["file"])
     return datasets
 
 
@@ -83,6 +132,7 @@ def get_aggregated_output(request):
         array = socket.recv_json()
         averages.append({
             "name": dataset["name"],
+            "simulated": dataset["simulated"],
             "values": array
         })
     unused_socket.close()

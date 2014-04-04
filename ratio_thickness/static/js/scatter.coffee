@@ -7,6 +7,7 @@ d3.chart.scatter = ->
     height = 600
     x_value = (d, i) -> d[0]
     y_value = (d, i) -> d[1]
+    color_value = (d) -> d.name
     x_scale = d3.scale.linear()
     y_scale = d3.scale.linear()
     color_scale = d3.scale.category20()
@@ -22,7 +23,7 @@ d3.chart.scatter = ->
         selection.each (data) ->
                  
             #get unique color names
-            color_names = (data.map (d) -> d.name).filter (d, i, self) ->
+            color_names = (data.map color_value).filter (d, i, self) ->
                 self.indexOf d == i
 
             color_scale.domain color_names
@@ -32,7 +33,7 @@ d3.chart.scatter = ->
                 {
                     values: d.values.map (e, j) ->
                         {
-                            name: d.name
+                            color: color_value(d)
                             x: x_value.call(d.values, e, j),
                             y: y_value.call(d.values, e, j)
                         }
@@ -98,10 +99,12 @@ d3.chart.scatter = ->
                 .classed "circle", true
 
             circles
+                .transition()
+                .duration(500)
                 .attr "r", 3
                 .attr "cx", (d) -> x_scale(d.x)
                 .attr "cy", (d) -> y_scale(d.y)
-                .style "fill", (d) -> color_scale(d.name)
+                .style "fill", (d) -> color_scale(d.color)
 
             circles
                 .exit()
@@ -124,12 +127,14 @@ d3.chart.scatter = ->
                 .attr "transform", (d, i) -> "translate(0, #{20 * i})"
 
             legends.selectAll "rect"
+                .transition()
                 .attr "x", width - margin.right - margin.left - 18
                 .attr "width", 18
                 .attr "height", 18
                 .style "fill", color_scale
 
             legends.selectAll "text"
+                .transition()
                 .attr "x", width - margin.right - margin.left - 24
                 .attr "y", 9
                 .attr "dy", ".35em"
@@ -146,6 +151,7 @@ d3.chart.scatter = ->
                 .call x_axis
 
             g.select ".y.axis"
+                .transition()
                 .call y_axis
 
     chart.width = (value) ->
@@ -170,6 +176,12 @@ d3.chart.scatter = ->
         if not arguments.length
             return x_value
         x_value = value
+        chart
+
+    chart.color_value = (value) ->
+        if not arguments.length
+            return color_value
+        color_value = value
         chart
 
     chart.y_value = (value) ->

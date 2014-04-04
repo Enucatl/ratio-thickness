@@ -1,39 +1,36 @@
 jQuery ->
 
     window.loadaggregated = ->
-        datasets = [
-            {
-                "name": "PMMA",
-                "file": "ratio_thickness/static/data/S00638_S00677.hdf5",
-                "a (mm)": 50,
-                "b (mm)": 6.3,
-            },
-            {
-                "name": "Plexiglass",
-                "file": "ratio_thickness/static/data/S00678_S00717.hdf5",
-                "a (mm)": 50,
-                "b (mm)": 9.40,
-            },
-            {
-                "name": "Aluminium",
-                "file": "ratio_thickness/static/data/S00718_S00757.hdf5",
-                "a (mm)": 30.50,
-                "b (mm)": 1,
-            },
-            {
-                "name": "Polystyrene",
-                "file": "ratio_thickness/static/data/S00758_S00797.hdf5",
-                "a (mm)": 62,
-                "b (mm)": 20,
-            },
-            {
-                "name": "Carbon fibers",
-                "file": "ratio_thickness/static/data/S00918_S00957.hdf5",
-                "a (mm)": 49.35,
-                "b (mm)": 4.1,
-            },
-        ]
-        factor = 0.618
+        slider = d3.chart.slider()
+            .width $("#slider").width()
+            .height 100
+            .x_title "maximum log ratio"
+
+        slider
+            .x_axis()
+            .tickFormat (d) ->
+                slider.x().tickFormat(3, d3.format "d") d 
+        d3.select "#slider"
+            .data [0]
+            .call slider
+
+        names = ["simulation", "materials"]
+        color_slider_scale = d3.scale.linear()
+        color_slider_axis = d3.svg.axis()
+            .scale color_slider_scale
+            .ticks 1
+            .tickFormat (d) -> names[d]
+
+        color_slider = d3.chart.slider()
+            .width $("#color-slider").width()
+            .height 100
+            .x_title "color coding"
+            .x color_slider_scale
+            .x_axis color_slider_axis
+        d3.select "#color-slider"
+            .data [0]
+            .call color_slider
+
         plots = [{ 
                     placeholder: "#ratio-abs"
                     plot: d3.chart.scatter()
@@ -55,26 +52,52 @@ jQuery ->
                     y_value: (d, i) -> d[2]
                 },
             ]        
-        request = d3.xhr("/aggregatedoutput")
-        request.mimeType "application/json"
-        request.response (request) ->
-            JSON.parse request.responseText
-        request.post JSON.stringify(datasets), (error, data) ->
+
+
+
+        d3.json "/datasets", (error, datasets) ->
             return console.warn error if error?
-            for plot in plots
-                width = $(plot.placeholder).width()
-                plot.plot.width width
-                plot.plot.x_title plot.x_title
-                plot.plot.y_title plot.y_title
-                plot.plot.x_scale()
-                    .domain plot.x_scale_domain
-                plot.plot.y_scale()
-                    .domain plot.y_scale_domain
-                plot.plot.height width * factor
-                plot.plot.x_value plot.x_value
-                plot.plot.y_value plot.y_value
-                d3.select plot.placeholder
-                    .data [data]
-                    .call plot.plot
+            factor = 0.618
+            request = d3.xhr("/aggregatedoutput")
+            request.mimeType "application/json"
+            request.response (request) ->
+                JSON.parse request.responseText
+            request.post JSON.stringify(datasets), (error, data) ->
+                return console.warn error if error?
+                for plot in plots
+                    width = $(plot.placeholder).width()
+                    plot.plot.width width
+                    plot.plot.x_title plot.x_title
+                    plot.plot.y_title plot.y_title
+                    plot.plot.x_scale()
+                        .domain plot.x_scale_domain
+                    plot.plot.y_scale()
+                        .domain plot.y_scale_domain
+                    plot.plot.height width * factor
+                    plot.plot.x_value plot.x_value
+                    plot.plot.y_value plot.y_value
+                    d3.select plot.placeholder
+                        .data [data]
+                        .call plot.plot
+
+                slider.on "slider_brushended", (maximum) ->
+                    for plot in plots
+                        plot.y_scale_domain[1] = maximum
+                        plot.plot.y_scale()
+                            .domain plot.y_scale_domain
+                        d3.select plot.placeholder
+                            .call plot.plot
+
+                color_slider.on "slider_brushended", (value) ->
+                    console.log value
+                    if value == 0
+                        f = (d) -> d.simulated
+                    else
+                        f = (d) -> d.name
+                    for plot in plots
+                        plot.plot.color_value f
+                        d3.select plot.placeholder
+                            .data [data]
+                            .call plot.plot
 
     window.loadaggregated()
