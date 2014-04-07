@@ -7,14 +7,14 @@ import zmq
 def get_datasets(request):
     datasets = [
         {
-            "name": "PMMA",
+            "name": "Teflon",
             "file": "ratio_thickness/static/data/S00638_S00677.hdf5",
             "a (mm)": 50,
             "b (mm)": 6.3,
             "simulated": False,
         },
         {
-            "name": "Plexiglass",
+            "name": "PMMA",
             "file": "ratio_thickness/static/data/S00678_S00717.hdf5",
             "a (mm)": 50,
             "b (mm)": 9.40,
