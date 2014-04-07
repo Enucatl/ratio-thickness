@@ -14,7 +14,7 @@ def get_datasets(request):
             "simulated": False,
         },
         {
-            "name": "PMMA",
+            "name": "Nylon",
             "file": "ratio_thickness/static/data/S00678_S00717.hdf5",
             "a (mm)": 50,
             "b (mm)": 9.40,
