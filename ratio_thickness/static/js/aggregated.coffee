@@ -27,6 +27,7 @@ jQuery ->
             .x_title "color coding"
             .x color_slider_scale
             .x_axis color_slider_axis
+            .margin {top: 20, right: 40, bottom: 20, left: 40}
         d3.select "#color-slider"
             .data [0]
             .call color_slider
@@ -89,9 +90,9 @@ jQuery ->
                             .call plot.plot
 
                 color_slider.on "slider_brushended", (value) ->
-                    console.log value
                     if value == 0
-                        f = (d) -> d.simulated
+                        f = (d) ->
+                            if d.simulated then "simulated" else "real data"
                     else
                         f = (d) -> d.name
                     for plot in plots

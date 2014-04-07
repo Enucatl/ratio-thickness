@@ -111,8 +111,8 @@ d3.chart.scatter = ->
                 .remove()
 
             #update legend
-            legends = g.select ".legends"
-                .selectAll ".legend"
+            legends = g.select "g.legends"
+                .selectAll "g.legend"
                 .data color_scale.domain()
 
             l_enter = legends
@@ -120,26 +120,32 @@ d3.chart.scatter = ->
                 .append "g"
                 .classed "legend", true
 
-            l_enter.append "rect"
-            l_enter.append "text"
+            legends
+                .each (d) ->
+                    rects = d3.select this
+                        .selectAll "rect"
+                        .data [d]
+                    rects.enter()
+                        .append "rect"
+                        .attr "x", width - margin.right - margin.left - 18
+                        .attr "width", 18
+                        .attr "height", 18
+                    rects
+                        .style "fill", color_scale
+                    texts = d3.select this
+                        .selectAll "text"
+                        .data [d]
+                    texts.enter()
+                        .append "text"
+                        .attr "x", width - margin.right - margin.left - 24
+                        .attr "y", 9
+                        .attr "dy", ".35em"
+                        .style "text-anchor", "end"
+                    texts
+                        .text (d) -> d
 
             legends
                 .attr "transform", (d, i) -> "translate(0, #{20 * i})"
-
-            legends.selectAll "rect"
-                .transition()
-                .attr "x", width - margin.right - margin.left - 18
-                .attr "width", 18
-                .attr "height", 18
-                .style "fill", color_scale
-
-            legends.selectAll "text"
-                .transition()
-                .attr "x", width - margin.right - margin.left - 24
-                .attr "y", 9
-                .attr "dy", ".35em"
-                .style "text-anchor", "end"
-                .text (d) -> d
 
             legends
                 .exit()
