@@ -26,10 +26,22 @@ d3.chart.slider = ->
         handle
             .attr "cx", x(value)
 
+    half_breaks = (array) ->
+        last = array.slice(1)
+        first = array.slice(0, -1)
+        console.log last
+        console.log first
+        last.map (d, i) ->
+            first[i] + (d - first[i]) / 2
+
     round_to_nearest_tick = (extent) ->
-        b = x.ticks(x_axis.ticks()[0])
-        maximum_index = d3.bisectLeft b, extent[0]
-        [b[maximum_index], b[maximum_index]]
+        ticks = x.ticks(x_axis.ticks()[0])
+        domain = half_breaks ticks
+        value = extent[0]
+        thresholds = d3.scale.threshold()
+            .domain half_breaks ticks
+            .range ticks
+        [thresholds(value), thresholds(value)]
             
     brushended = ->
         if not d3.event.sourceEvent
