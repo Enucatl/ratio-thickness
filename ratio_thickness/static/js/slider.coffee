@@ -14,6 +14,7 @@ d3.chart.slider = ->
         .orient "bottom"
     x_title = undefined
     brush = d3.svg.brush()
+        .extent [0, 0]
     handle = undefined
 
     dispatch = d3.dispatch "slider_brushended"
@@ -61,7 +62,6 @@ d3.chart.slider = ->
 
             brush
                 .x x
-                .extent [0, 0]
                 .on "brush", brushed
                 .on "brushend", brushended
 
@@ -158,6 +158,13 @@ d3.chart.slider = ->
             return x_axis
         x_axis = value
         chart
+
+    chart.brush = (value) ->
+        if not arguments.length
+            return brush
+        brush = value
+        chart
+
     d3.rebind chart, dispatch, "on"
 
     chart

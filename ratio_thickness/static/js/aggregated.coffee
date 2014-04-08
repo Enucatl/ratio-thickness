@@ -28,6 +28,7 @@ jQuery ->
             .x color_slider_scale
             .x_axis color_slider_axis
             .margin {top: 20, right: 40, bottom: 20, left: 40}
+
         d3.select "#color-slider"
             .data [0]
             .call color_slider
