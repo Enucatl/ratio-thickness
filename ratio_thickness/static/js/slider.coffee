@@ -29,8 +29,6 @@ d3.chart.slider = ->
     half_breaks = (array) ->
         last = array.slice(1)
         first = array.slice(0, -1)
-        console.log last
-        console.log first
         last.map (d, i) ->
             first[i] + (d - first[i]) / 2
 
