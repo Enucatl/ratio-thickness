@@ -52,8 +52,8 @@ def get_datasets(request):
         {
             "name": "Paper",
             "file": "ratio_thickness/static/data/S00415_S00514.hdf5",
-            "a (mm)": 37,
-            "b (mm)": 96,
+            "a (mm)": 96,
+            "b (mm)": 37,
             "simulated": False,
         },
         {
