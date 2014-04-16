@@ -40,12 +40,12 @@
 <%block name="extra_js">
 
     <script
-        src="${assetmutator_url('ratio_thickness:static/js/scatter.coffee')}"
+        src="${assetmutator_url('ratio_thickness:static/js/d3.scatter/scatter.coffee')}"
         type="text/javascript">
     </script>
 
     <script
-        src="${assetmutator_url('ratio_thickness:static/js/slider.coffee')}"
+        src="${assetmutator_url('ratio_thickness:static/js/d3.slider/slider.coffee')}"
         type="text/javascript">
     </script>
 

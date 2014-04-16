@@ -8,14 +8,14 @@ def get_datasets(request):
     datasets = [
         {
             "name": "Teflon",
-            "file": "ratio_thickness/static/data/S00638_S00677.hdf5",
+            "file": "ratio_thickness/static/data/S00208_S00307.hdf5",
             "a (mm)": 50,
             "b (mm)": 6.3,
             "simulated": False,
         },
         {
             "name": "Nylon",
-            "file": "ratio_thickness/static/data/S00678_S00717.hdf5",
+            "file": "ratio_thickness/static/data/S00108_S00207.hdf5",
             "a (mm)": 50,
             "b (mm)": 9.40,
             "simulated": False,
@@ -39,6 +39,20 @@ def get_datasets(request):
             "file": "ratio_thickness/static/data/S00918_S00957.hdf5",
             "a (mm)": 49.35,
             "b (mm)": 4.1,
+            "simulated": False,
+        },
+        {
+            "name": "Copper",
+            "file": "ratio_thickness/static/data/S00315_S00414.hdf5",
+            "a (mm)": 30.50,
+            "b (mm)": 1,
+            "simulated": False,
+        },
+        {
+            "name": "Paper",
+            "file": "ratio_thickness/static/data/S00415_S00514.hdf5",
+            "a (mm)": 37,
+            "b (mm)": 96,
             "simulated": False,
         },
         {

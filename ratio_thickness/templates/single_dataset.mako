@@ -99,12 +99,12 @@
     </script>
 
     <script
-        src="${assetmutator_url('ratio_thickness:static/js/scatter.coffee')}"
+        src="${assetmutator_url('ratio_thickness:static/js/d3.scatter/scatter.coffee')}"
         type="text/javascript">
     </script>
 
     <script
-        src="${assetmutator_url('ratio_thickness:static/js/image.coffee')}"
+        src="${assetmutator_url('ratio_thickness:static/js/d3.image/image.coffee')}"
         type="text/javascript">
     </script>
 
