@@ -1,6 +1,7 @@
 from pyramid.view import view_config
 import pypes.packet
 import zmq
+import h5py
 
 
 @view_config(route_name='datasets', renderer='json')
@@ -106,6 +107,24 @@ def get_datasets(request):
         },
     ]
     return datasets
+
+
+@view_config(route_name='hdf5dataset', renderer='json')
+def get_hdf5_dataset(request):
+    json = request.json_body
+    file_name = json["file"]
+    dataset_name = json["dataset"]
+    hdf5_file = h5py.File(file_name, "r")
+    try:
+        dataset = hdf5_file[dataset_name][...]
+    except KeyError:
+        dataset = {
+            "error": "dataset {0} not found!".format(
+                dataset_name),
+        }
+    finally:
+        hdf5_file.close()
+    return dataset
 
 
 @view_config(route_name='pipeline', renderer='json')
