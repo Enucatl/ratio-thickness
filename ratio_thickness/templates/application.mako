@@ -62,12 +62,17 @@
     <div class="container">
       <!-- Example row of columns -->
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
+            <h2>Dataset reconstruction</h2>
+            <p>See the reconstruction for each dataset.</p>
+            <p><a class="btn btn-default" href="/phase_stepping" role="button">View details &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
             <h2>Single dataset</h2>
             <p>See the results for each single dataset.</p>
             <p><a class="btn btn-default" href="/single_dataset" role="button">View details &raquo;</a></p>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
             <h2>Aggregated</h2>
             <p>Compare the average log ratio for the different materials in
                 one plot.</p>

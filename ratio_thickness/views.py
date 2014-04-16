@@ -2,6 +2,7 @@ from pyramid.view import view_config
 import pypes.packet
 import zmq
 import h5py
+import numpy as np
 
 
 @view_config(route_name='datasets', renderer='json')
@@ -114,9 +115,15 @@ def get_hdf5_dataset(request):
     json = request.json_body
     file_name = json["file"]
     dataset_name = json["dataset"]
+    print(json)
     hdf5_file = h5py.File(file_name, "r")
     try:
-        dataset = hdf5_file[dataset_name][...]
+        dataset = hdf5_file[dataset_name]
+        print(dataset.shape)
+        dataset = np.rollaxis(
+            dataset[0, 300:850, ...], 1)
+        print(dataset.shape)
+        dataset = dataset.tolist()
     except KeyError:
         dataset = {
             "error": "dataset {0} not found!".format(
@@ -171,6 +178,12 @@ def get_aggregated_output(request):
     unused_socket.close()
     socket.close()
     return averages
+
+
+@view_config(route_name='phase_stepping',
+             renderer='templates/phase_stepping.mako')
+def get_phase_stepping(request):
+    return {"title": "Phase Stepping"}
 
 
 @view_config(route_name='home', renderer='templates/index.mako')
