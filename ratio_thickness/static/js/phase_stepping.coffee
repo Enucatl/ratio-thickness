@@ -2,6 +2,7 @@ jQuery ->
 
     window.loadreconstruction = (title, filename) ->
         $("#page-title").text("Dataset reconstruction: #{title}")
+        factor = 0.618
         images = [
             {
                 file: filename
@@ -62,6 +63,35 @@ jQuery ->
                     .call image.image
 
         images.map get_image
+
+        #request data
+        request = d3.xhr "/hdf5dataset"
+        request.mimeType "application/json"
+        request.response (request) ->
+            JSON.parse request.responseText
+        request_object = JSON.stringify({
+                file: filename
+                dataset: "postprocessing/visibility"
+            })     
+        request.post request_object, (error, data) ->
+            return console.warn error if error?
+            flattened = data.reduce (a, b) -> a.concat b
+            placeholder = "#visibility-distribution"
+            width = $(placeholder).width()
+            histogram = d3.chart.histogram()
+            histogram
+                .x_scale()
+                .domain [0, 1.2 * d3.max flattened]
+                .nice()
+            histogram
+                .width width
+                .height width * factor
+                .value (d) -> d
+                .x_title "visibility"
+                .y_title "pixels"
+            d3.select placeholder
+                .data [flattened]
+                .call histogram
 
     $("#select-dataset").change ->
         file = $(this).val()

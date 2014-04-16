@@ -7,3 +7,6 @@
 [submodule "ratio_thickness/static/js/d3.slider"]
 	path = ratio_thickness/static/js/d3.slider
 	url = git@github.com:Enucatl/d3.slider.git
+[submodule "ratio_thickness/static/js/d3.histogram"]
+	path = ratio_thickness/static/js/d3.histogram
+	url = git@github.com:Enucatl/d3.histogram.git

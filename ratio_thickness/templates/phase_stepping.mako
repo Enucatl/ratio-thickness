@@ -87,6 +87,11 @@
     </script>
 
     <script
+        src="${assetmutator_url('ratio_thickness:static/js/d3.histogram/histogram.coffee')}"
+        type="text/javascript">
+    </script>
+
+    <script
         src="${assetmutator_url('ratio_thickness:static/js/phase_stepping.coffee')}"
         type="text/javascript">
     </script>
