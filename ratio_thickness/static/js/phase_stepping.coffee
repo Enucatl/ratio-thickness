@@ -93,6 +93,22 @@ jQuery ->
                 .data [flattened]
                 .call histogram
 
+        #request phase stepping curves
+        request = d3.xhr "/hdf5dataset"
+        request.mimeType "application/json"
+        request.response (request) ->
+            JSON.parse request.responseText
+        request_object = JSON.stringify({
+                file: filename
+                dataset: "postprocessing/phase_stepping_curves"
+            })     
+        request.post request_object, (error, data) ->
+            return console.warn error if error?
+            flattened = data.reduce (a, b) -> a.concat b
+            placeholder = "#phase-stepping-curves"
+            width = $(placeholder).width()
+            d3.select placeholder
+
     $("#select-dataset").change ->
         file = $(this).val()
         name = $(".select2-chosen").text()
