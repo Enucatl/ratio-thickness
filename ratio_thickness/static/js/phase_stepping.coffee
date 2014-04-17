@@ -112,7 +112,7 @@ jQuery ->
     $("#select-dataset").change ->
         file = $(this).val()
         name = $(".select2-chosen").text()
-        window.loadimages(name, file)
+        window.loadreconstruction(name, file)
 
     jQuery.ajax {
         url: "/datasets"

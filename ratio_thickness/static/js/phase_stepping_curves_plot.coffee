@@ -16,11 +16,13 @@ d3.chart.phase_stepping = ->
         .orient "left"
     x_title = undefined
     y_title = undefined
+    data = undefined
     chart = (selection) ->
-        selection.each (data) ->
+        selection.each (i, j) ->
                  
             #update scales
             x_scale
+                .domain data.phase_stepping_curves.values[i][j].length
                 .range [0, width - margin.left - margin.right]
             y_scale
                 .range [height - margin.top - margin.bottom, 0]
@@ -70,7 +72,7 @@ d3.chart.phase_stepping = ->
             #update circles
             circles = g.select ".circles"
                 .selectAll ".circle"
-                .data data.phase_stepping_curve
+                .data data.phase_stepping_curves.values[i][j]
 
             circles
                 .enter()
@@ -88,46 +90,46 @@ d3.chart.phase_stepping = ->
                 .exit()
                 .remove()
 
-            #update legend
-            legends = g.select "g.legends"
-                .selectAll "g.legend"
-                .data color_scale.domain()
+            ##update legend
+            #legends = g.select "g.legends"
+                #.selectAll "g.legend"
+                #.data color_scale.domain()
 
-            l_enter = legends
-                .enter()
-                .append "g"
-                .classed "legend", true
+            #l_enter = legends
+                #.enter()
+                #.append "g"
+                #.classed "legend", true
 
-            legends
-                .each (d) ->
-                    rects = d3.select this
-                        .selectAll "rect"
-                        .data [d]
-                    rects.enter()
-                        .append "rect"
-                        .attr "x", width - margin.right - margin.left - 18
-                        .attr "width", 18
-                        .attr "height", 18
-                    rects
-                        .style "fill", color_scale
-                    texts = d3.select this
-                        .selectAll "text"
-                        .data [d]
-                    texts.enter()
-                        .append "text"
-                        .attr "x", width - margin.right - margin.left - 24
-                        .attr "y", 9
-                        .attr "dy", ".35em"
-                        .style "text-anchor", "end"
-                    texts
-                        .text (d) -> d
+            #legends
+                #.each (d) ->
+                    #rects = d3.select this
+                        #.selectAll "rect"
+                        #.data [d]
+                    #rects.enter()
+                        #.append "rect"
+                        #.attr "x", width - margin.right - margin.left - 18
+                        #.attr "width", 18
+                        #.attr "height", 18
+                    #rects
+                        #.style "fill", color_scale
+                    #texts = d3.select this
+                        #.selectAll "text"
+                        #.data [d]
+                    #texts.enter()
+                        #.append "text"
+                        #.attr "x", width - margin.right - margin.left - 24
+                        #.attr "y", 9
+                        #.attr "dy", ".35em"
+                        #.style "text-anchor", "end"
+                    #texts
+                        #.text (d) -> d
 
-            legends
-                .attr "transform", (d, i) -> "translate(0, #{20 * i})"
+            #legends
+                #.attr "transform", (d, i) -> "translate(0, #{20 * i})"
 
-            legends
-                .exit()
-                .remove()
+            #legends
+                #.exit()
+                #.remove()
 
             #update axes
             g.select ".x.axis"
@@ -196,6 +198,12 @@ d3.chart.phase_stepping = ->
         if not arguments.length
             return y_scale
         y_scale = value
+        chart
+
+    chart.data = (value) ->
+        if not arguments.length
+            return data
+        data = value
         chart
 
     chart
