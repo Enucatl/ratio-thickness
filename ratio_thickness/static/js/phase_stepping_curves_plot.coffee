@@ -2,7 +2,7 @@ if not d3.chart?
     d3.chart = {}
 
 d3.chart.phase_stepping = ->
-    margin = {top: 20, right: 20, bottom: 20, left: 30}
+    margin = {top: 20, right: 20, bottom: 20, left: 60}
     width = 900
     height = 600
     x_scale = d3.scale.linear()
@@ -17,16 +17,36 @@ d3.chart.phase_stepping = ->
     x_title = undefined
     y_title = undefined
     data = undefined
+    line = d3.svg.line()
+        .x (d) -> x_scale(d.x)
+        .y (d) -> y_scale(d.y)
     chart = (selection) ->
-        selection.each (i, j) ->
+        selection.each (pixel) ->
                  
+            console.log data
+            console.log pixel
+            col = pixel.col
+            row = pixel.row
+
+            sample_points = data.phase_stepping_curves.values[row][col]
+            flat_parameters = data.flat_parameters.values[row][col]
+            
             #update scales
+            n = sample_points.length
+            function_sampling = (i for i in [0..n] by 0.1)
+            flat_curve = function_sampling.map (d) ->
+                {
+                    x: d
+                    y: flat_parameters[0] / n + flat_parameters[2] * Math.cos(2 * Math.PI * d / (n + 1) + flat_parameters[1]) / n
+                }
             x_scale
-                .domain data.phase_stepping_curves.values[i][j].length
+                .domain [0, n]
                 .range [0, width - margin.left - margin.right]
             y_scale
+                .domain d3.extent sample_points
                 .range [height - margin.top - margin.bottom, 0]
 
+            console.log "scales ready"
             #select the svg if it exists
             svg = d3.select this
                 .selectAll "svg"
@@ -53,12 +73,13 @@ d3.chart.phase_stepping = ->
                 .attr "dy", ".71em"
                 .style "text-anchor", "end"
                 .text y_title
-            g_enter.append "g"
+            g_enter.append "path"
                 .classed "flat line", true
-            g_enter.append "g"
+            g_enter.append "path"
                 .classed "sample line", true
             g_enter.append "g"
                 .classed "circles", true
+            console.log "skeleton ready"
 
             #update the dimensions
             svg
@@ -69,15 +90,18 @@ d3.chart.phase_stepping = ->
             g = svg.select "g"
                 .attr "transform", "translate(#{margin.left}, #{margin.top})"
 
+            console.log "updating circles"
             #update circles
             circles = g.select ".circles"
                 .selectAll ".circle"
-                .data data.phase_stepping_curves.values[i][j]
+                .data (d) -> d.phase_stepping_curves.values[row][col]
 
             circles
                 .enter()
                 .append "circle"
                 .classed "circle", true
+
+            console.log circles.data()
 
             circles
                 .transition()
@@ -89,6 +113,11 @@ d3.chart.phase_stepping = ->
             circles
                 .exit()
                 .remove()
+
+            console.log flat_curve
+            g.select ".flat.line"
+                .attr "d", line(flat_curve)
+                .style "stroke", "darkblue"
 
             ##update legend
             #legends = g.select "g.legends"

@@ -92,6 +92,11 @@
     </script>
 
     <script
+        src="${assetmutator_url('ratio_thickness:static/js/phase_stepping_curves_plot.coffee')}"
+        type="text/javascript">
+    </script>
+
+    <script
         src="${assetmutator_url('ratio_thickness:static/js/phase_stepping.coffee')}"
         type="text/javascript">
     </script>
