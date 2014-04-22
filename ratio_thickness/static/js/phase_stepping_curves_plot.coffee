@@ -30,12 +30,11 @@ d3.chart.phase_stepping = ->
 
             sample_points = data.phase_stepping_curves.values[row][col]
             flat_parameters = data.flat_parameters.values[row][col]
+            flat_parameters[2] *= 2
             sample_parameters = data.sample_parameters.values[row][col]
             sample_parameters[2] *= flat_parameters[2] / sample_parameters[0]
             sample_parameters[1] += flat_parameters[1]
             sample_parameters[0] *= flat_parameters[0]
-            console.log sample_parameters
-            console.log flat_parameters
             parameters = [
                 {
                     name: "flat"
@@ -63,7 +62,10 @@ d3.chart.phase_stepping = ->
                 .domain [0, n]
                 .range [0, width - margin.left - margin.right]
             y_scale
-                .domain d3.extent sample_points
+                .domain [
+                    0.9 * d3.min(sample_points),
+                    1.1 * d3.max(sample_points)
+                ]
                 .range [height - margin.top - margin.bottom, 0]
 
             console.log "scales ready"
