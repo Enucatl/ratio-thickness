@@ -77,6 +77,11 @@
 <%block name="extra_js">
 
     <script
+        src="${assetmutator_url('ratio_thickness:static/js/select_dataset.coffee')}"
+        type="text/javascript">
+    </script>
+
+    <script
         src="${assetmutator_url('ratio_thickness:static/js/d3.scatter/scatter.coffee')}"
         type="text/javascript">
     </script>
