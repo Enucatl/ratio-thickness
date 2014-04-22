@@ -113,7 +113,7 @@ jQuery ->
                         .x_title "phase stepping point"
                         .y_title "detector counts"
                     d3.select placeholder
-                        .data [{col: 0, row: 0}]
+                        .data [{col: 150, row: 10}]
                         .call phase_stepping_plot
 
         get_image = (image) ->

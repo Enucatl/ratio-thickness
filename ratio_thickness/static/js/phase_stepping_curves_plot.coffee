@@ -35,6 +35,8 @@ d3.chart.phase_stepping = ->
             sample_parameters[2] *= flat_parameters[2] / sample_parameters[0]
             sample_parameters[1] += flat_parameters[1]
             sample_parameters[0] *= flat_parameters[0]
+            console.log "flat_parameters", flat_parameters
+            console.log "sample_parameters", sample_parameters
             parameters = [
                 {
                     name: "flat"
@@ -45,6 +47,7 @@ d3.chart.phase_stepping = ->
                     values: sample_parameters
                 }
             ]
+            console.log parameters
             
             #update scales
             n = sample_points.length
@@ -58,17 +61,22 @@ d3.chart.phase_stepping = ->
                             y: d.values[0] / n + d.values[2] * Math.cos(2 * Math.PI * i / (n + 1) + d.values[1]) / n
                         }
                 }
+            all_points = [
+                sample_points,
+                curves[0].values.map (d) -> d.y,
+                curves[1].values.map (d) -> d.y,
+            ]
+            flattened = all_points.reduce (a, b) -> a.concat b
             x_scale
                 .domain [0, n - 1]
                 .range [0, width - margin.left - margin.right]
             y_scale
                 .domain [
-                    0.9 * d3.min(sample_points),
-                    1.1 * d3.max(sample_points)
+                    0.9 * d3.min(flattened),
+                    1.1 * d3.max(flattened)
                 ]
                 .range [height - margin.top - margin.bottom, 0]
 
-            console.log "scales ready"
             #select the svg if it exists
             svg = d3.select this
                 .selectAll "svg"
@@ -114,7 +122,6 @@ d3.chart.phase_stepping = ->
             g = svg.select "g"
                 .attr "transform", "translate(#{margin.left}, #{margin.top})"
 
-            console.log "updating circles"
             #update circles
             circles = g.select ".circles"
                 .selectAll ".circle"
@@ -129,7 +136,7 @@ d3.chart.phase_stepping = ->
 
             circles
                 .transition()
-                .duration(500)
+                .duration(200)
                 .attr "r", 3
                 .attr "cx", (d, i) -> x_scale(i)
                 .attr "cy", (d) -> y_scale(d)
@@ -140,6 +147,9 @@ d3.chart.phase_stepping = ->
                 .remove()
 
             g.selectAll ".line"
+                .data curves
+                .transition()
+                .duration(200)
                 .attr "d", (d) -> line(d.values)
                 .style "stroke", (d) -> color_scale d.name
 
