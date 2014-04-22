@@ -59,7 +59,7 @@ d3.chart.phase_stepping = ->
                         }
                 }
             x_scale
-                .domain [0, n]
+                .domain [0, n - 1]
                 .range [0, width - margin.left - margin.right]
             y_scale
                 .domain [

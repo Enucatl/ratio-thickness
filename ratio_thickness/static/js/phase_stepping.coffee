@@ -16,80 +16,71 @@ jQuery ->
                 })     
 
 
-        #$("#page-title").text("Dataset reconstruction: #{title}")
+        $("#page-title").text("Dataset reconstruction: #{title}")
         factor = 0.618
-        #images = [
-            #{
-                #file: filename
-                #dataset: "postprocessing/dpc_reconstruction"
-                #placeholder: "#absorption-image"
-                #image: d3.chart.image()
-            #},
-            #{
-                #file: filename
-                #dataset: "postprocessing/dpc_reconstruction"
-                #placeholder: "#dark-field-image"
-                #image: d3.chart.image()
-                    #.color_value (d) -> d[2]
-            #},
-            #{
-                #file: filename
-                #dataset: "postprocessing/dpc_reconstruction"
-                #placeholder: "#phase-image"
-                #image: d3.chart.image()
-                    #.color_value (d) -> d[1]
-            #},
-            #{
-                #file: filename
-                #dataset: "postprocessing/visibility"
-                #placeholder: "#visibility"
-                #image: d3.chart.image()
-                    #.color_value (d) -> d
-            #},
-            #{
-                #file: filename
-                #dataset: "postprocessing/flat_parameters"
-                #placeholder: "#flat-phase"
-                #image: d3.chart.image()
-                    #.color_value (d) -> d[1]
-            #},
-            #{
-                #file: filename
-                #dataset: "postprocessing/flat_parameters"
-                #placeholder: "#flat-absorption"
-                #image: d3.chart.image()
-                    #.color_value (d) -> d[0]
-            #},
-        #]
-        #get_image = (image) ->
-            ##request data
-            #get_request().post get_request_object(image.dataset), (error, data) ->
-                #return console.warn error if error?
-                #d3.select image.placeholder
-                    #.data [data]
-                    #.call image.image
+        images = [
+            {
+                file: filename
+                dataset: "postprocessing/dpc_reconstruction"
+                placeholder: "#absorption-image"
+                image: d3.chart.image()
+            },
+            {
+                file: filename
+                dataset: "postprocessing/dpc_reconstruction"
+                placeholder: "#dark-field-image"
+                image: d3.chart.image()
+                    .color_value (d) -> d[2]
+            },
+            {
+                file: filename
+                dataset: "postprocessing/dpc_reconstruction"
+                placeholder: "#phase-image"
+                image: d3.chart.image()
+                    .color_value (d) -> d[1]
+            },
+            {
+                file: filename
+                dataset: "postprocessing/visibility"
+                placeholder: "#visibility"
+                image: d3.chart.image()
+                    .color_value (d) -> d
+            },
+            {
+                file: filename
+                dataset: "postprocessing/flat_parameters"
+                placeholder: "#flat-phase"
+                image: d3.chart.image()
+                    .color_value (d) -> d[1]
+            },
+            {
+                file: filename
+                dataset: "postprocessing/flat_parameters"
+                placeholder: "#flat-absorption"
+                image: d3.chart.image()
+                    .color_value (d) -> d[0]
+            },
+        ]
 
-        #images.map get_image
-
-        #get_request().post get_request_object("postprocessing/visibility"), (error, data) ->
-            #return console.warn error if error?
-            #flattened = data.reduce (a, b) -> a.concat b
-            #placeholder = "#visibility-distribution"
-            #width = $(placeholder).width()
-            #histogram = d3.chart.histogram()
-            #histogram
-                #.x_scale()
-                #.domain [0, 1.2 * d3.max flattened]
-                #.nice()
-            #histogram
-                #.width width
-                #.height width * factor
-                #.value (d) -> d
-                #.x_title "visibility"
-                #.y_title "pixels"
-            #d3.select placeholder
-                #.data [flattened]
-                #.call histogram
+        get_request().post get_request_object("postprocessing/visibility"), (error, data) ->
+            return console.warn error if error?
+            flattened = data.reduce (a, b) -> a.concat b
+            placeholder = "#visibility-distribution"
+            width = $(placeholder).width()
+            histogram = d3.chart.histogram()
+            histogram
+                .x_scale()
+                .domain [0, 1.2 * d3.max flattened]
+                .nice()
+            histogram
+                .width width
+                .height width * factor
+                .value (d) -> d
+                .x_title "visibility"
+                .y_title "pixels"
+            d3.select placeholder
+                .data [flattened]
+                .call histogram
 
         #request phase stepping curves
         phase_stepping_data = {}
@@ -119,9 +110,26 @@ jQuery ->
                     phase_stepping_plot
                         .width $(placeholder).width()
                         .height factor * $(placeholder).width()
+                        .x_title "phase stepping point"
+                        .y_title "detector counts"
                     d3.select placeholder
                         .data [{col: 0, row: 0}]
                         .call phase_stepping_plot
+
+        get_image = (image) ->
+            #request data
+            get_request().post get_request_object(image.dataset), (error, data) ->
+                return console.warn error if error?
+                d3.select image.placeholder
+                    .data [data]
+                    .call image.image
+                image.image.on "line_over", (line) ->
+                    console.log line
+                    d3.select "#phase-stepping-curves"
+                        .data [line]
+                        .call phase_stepping_plot
+
+        images.map get_image
 
 
     $("#select-dataset").change ->
