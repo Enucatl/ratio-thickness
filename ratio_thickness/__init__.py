@@ -11,6 +11,7 @@ def main(global_config, **settings):
     config.add_route('home', '/')
     config.add_route('hdf5dataset', '/hdf5dataset')
     config.add_route('phase_stepping', '/phase_stepping')
+    config.add_route('normalizedchisquare', '/normalizedchisquare')
     config.add_route('datasets', '/datasets')
     config.add_route('pipelineoutput', '/pipelineoutput/{port}')
     config.add_route('pipeline', '/pipeline')

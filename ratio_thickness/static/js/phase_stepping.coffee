@@ -24,6 +24,7 @@ jQuery ->
                 dataset: "postprocessing/dpc_reconstruction"
                 placeholder: "#absorption-image"
                 image: d3.chart.image()
+                colorbar: Colorbar()
             },
             {
                 file: filename
@@ -31,6 +32,7 @@ jQuery ->
                 placeholder: "#dark-field-image"
                 image: d3.chart.image()
                     .color_value (d) -> d[2]
+                colorbar: Colorbar()
             },
             {
                 file: filename
@@ -38,6 +40,7 @@ jQuery ->
                 placeholder: "#phase-image"
                 image: d3.chart.image()
                     .color_value (d) -> d[1]
+                colorbar: Colorbar()
             },
             {
                 file: filename
@@ -45,6 +48,7 @@ jQuery ->
                 placeholder: "#visibility"
                 image: d3.chart.image()
                     .color_value (d) -> d
+                colorbar: Colorbar()
             },
             {
                 file: filename
@@ -52,6 +56,7 @@ jQuery ->
                 placeholder: "#flat-phase"
                 image: d3.chart.image()
                     .color_value (d) -> d[1]
+                colorbar: Colorbar()
             },
             {
                 file: filename
@@ -59,8 +64,48 @@ jQuery ->
                 placeholder: "#flat-absorption"
                 image: d3.chart.image()
                     .color_value (d) -> d[0]
+                colorbar: Colorbar()
             },
         ]
+
+        request = d3.xhr "/normalizedchisquare"
+        request.mimeType "application/json"
+        request.response (request) ->
+            JSON.parse request.responseText
+        request
+        request_object = JSON.stringify({
+                file: filename
+            })     
+        request.post request_object, (error, data) ->
+            return console.warn error if error?
+            chi_square = d3.chart.image()
+                .color_value (d) -> d
+            d3.select "#chi-square"
+                .data [data]
+                .call chi_square
+            chi_square.on "line_over", (line) ->
+                d3.select "#phase-stepping-curves"
+                    .data [line]
+                    .call phase_stepping_plot
+            flattened = data.reduce (a, b) -> a.concat b
+            placeholder = "#chi-square-distribution"
+            width = $(placeholder).width()
+            histogram = d3.chart.histogram()
+            histogram
+                .x_scale()
+                .domain [0, d3.max(flattened)]
+                .nice()
+            histogram
+                .margin {top: 20, right: 20, bottom: 20, left: 50}
+                .n_bins 50
+                .width width
+                .height width * factor
+                .value (d) -> d
+                .x_title "normalized χ²"
+                .y_title "pixels"
+            d3.select placeholder
+                .data [flattened]
+                .call histogram
 
         get_request().post get_request_object("postprocessing/visibility"), (error, data) ->
             return console.warn error if error?
@@ -73,6 +118,8 @@ jQuery ->
                 .domain [0, 1.2 * d3.max flattened]
                 .nice()
             histogram
+                .margin {top: 20, right: 20, bottom: 20, left: 50}
+                .n_bins 50
                 .width width
                 .height width * factor
                 .value (d) -> d
@@ -127,6 +174,10 @@ jQuery ->
                     d3.select "#phase-stepping-curves"
                         .data [line]
                         .call phase_stepping_plot
+                image.colorbar
+                    .scale image.image.color()
+                    .update()
+                console.log "image colorbar origin", image.colorbar.origin()
 
         images.map get_image
 

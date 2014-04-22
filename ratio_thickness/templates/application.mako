@@ -69,7 +69,7 @@
         </div>
         <div class="col-md-4">
             <h2>Single dataset</h2>
-            <p>See the results for each single dataset.</p>
+            <p>See the results for each dataset.</p>
             <p><a class="btn btn-default" href="/single_dataset" role="button">View details &raquo;</a></p>
         </div>
         <div class="col-md-4">

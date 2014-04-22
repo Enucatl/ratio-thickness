@@ -110,19 +110,54 @@ def get_datasets(request):
     return datasets
 
 
+@view_config(route_name='normalizedchisquare', renderer='json')
+def get_normalized_chi_square(request):
+    json = request.json_body
+    file_name = json["file"]
+    hdf5_file = h5py.File(file_name, "r")
+    try:
+        fitted = hdf5_file["postprocessing/dpc_reconstruction"]
+        flat_parameters = hdf5_file["postprocessing/flat_parameters"]
+        points = hdf5_file["postprocessing/phase_stepping_curves"]
+        fitted = np.rollaxis(fitted[0, 300:850, ...], 1)
+        points = np.rollaxis(points[0, 300:850, ...], 1)
+        n = points.shape[-1]
+        flat_parameters = np.rollaxis(flat_parameters[0, 300:850, ...], 1)
+        flat_parameters[..., 2] *= 2
+        fitted[..., 2] *= flat_parameters[..., 2] / fitted[..., 0]
+        fitted[..., 1] += flat_parameters[..., 1]
+        fitted[..., 0] *= flat_parameters[..., 0]
+        dataset = np.tile(np.arange(n),
+                          (
+                              points.shape[0],
+                              points.shape[1],
+                              1
+                          ))
+        dataset = 2 * np.pi * dataset / (n + 1) + fitted[..., 1, np.newaxis]
+        dataset = (fitted[..., 0, np.newaxis] +
+                   fitted[..., 2, np.newaxis] * np.cos(dataset)) / n
+        dataset = np.sum((dataset - points) ** 2 / points, axis=-1) / n
+        print(dataset.shape)
+        dataset = dataset.tolist()
+    except KeyError:
+        dataset = {
+            "error": "dataset not found!"
+        }
+    finally:
+        hdf5_file.close()
+    return dataset
+
+
 @view_config(route_name='hdf5dataset', renderer='json')
 def get_hdf5_dataset(request):
     json = request.json_body
     file_name = json["file"]
     dataset_name = json["dataset"]
-    print(json)
     hdf5_file = h5py.File(file_name, "r")
     try:
         dataset = hdf5_file[dataset_name]
-        print(dataset.shape)
         dataset = np.rollaxis(
             dataset[0, 300:850, ...], 1)
-        print(dataset.shape)
         dataset = dataset.tolist()
     except KeyError:
         dataset = {

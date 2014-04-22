@@ -49,3 +49,7 @@ circle.highlighted {
   stroke-width: 10px;
   stroke-linecap: round;
 }
+
+.bar {
+    fill: darkblue;
+}
