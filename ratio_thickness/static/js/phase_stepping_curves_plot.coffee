@@ -30,14 +30,34 @@ d3.chart.phase_stepping = ->
 
             sample_points = data.phase_stepping_curves.values[row][col]
             flat_parameters = data.flat_parameters.values[row][col]
+            sample_parameters = data.sample_parameters.values[row][col]
+            sample_parameters[2] *= flat_parameters[2] / sample_parameters[0]
+            sample_parameters[1] += flat_parameters[1]
+            sample_parameters[0] *= flat_parameters[0]
+            console.log sample_parameters
+            console.log flat_parameters
+            parameters = [
+                {
+                    name: "flat"
+                    values: flat_parameters
+                },
+                {
+                    name: "sample"
+                    values: sample_parameters
+                }
+            ]
             
             #update scales
             n = sample_points.length
             function_sampling = (i for i in [0..n] by 0.1)
-            flat_curve = function_sampling.map (d) ->
+            curves = parameters.map (d) ->
                 {
-                    x: d
-                    y: flat_parameters[0] / n + flat_parameters[2] * Math.cos(2 * Math.PI * d / (n + 1) + flat_parameters[1]) / n
+                    name: d.name
+                    values: function_sampling.map (i) ->
+                        {
+                            x: i
+                            y: d.values[0] / n + d.values[2] * Math.cos(2 * Math.PI * i / (n + 1) + d.values[1]) / n
+                        }
                 }
             x_scale
                 .domain [0, n]
@@ -73,13 +93,15 @@ d3.chart.phase_stepping = ->
                 .attr "dy", ".71em"
                 .style "text-anchor", "end"
                 .text y_title
-            g_enter.append "path"
-                .classed "flat line", true
-            g_enter.append "path"
-                .classed "sample line", true
+            g_enter.selectAll ".line"
+                .data curves
+                .enter()
+                .append "path"
+                .classed "line", true
             g_enter.append "g"
                 .classed "circles", true
-            console.log "skeleton ready"
+            g_enter.append "g"
+                .classed "legends", true
 
             #update the dimensions
             svg
@@ -109,56 +131,56 @@ d3.chart.phase_stepping = ->
                 .attr "r", 3
                 .attr "cx", (d, i) -> x_scale(i)
                 .attr "cy", (d) -> y_scale(d)
+                .style "fill", color_scale "sample"
 
             circles
                 .exit()
                 .remove()
 
-            console.log flat_curve
-            g.select ".flat.line"
-                .attr "d", line(flat_curve)
-                .style "stroke", "darkblue"
+            g.selectAll ".line"
+                .attr "d", (d) -> line(d.values)
+                .style "stroke", (d) -> color_scale d.name
 
-            ##update legend
-            #legends = g.select "g.legends"
-                #.selectAll "g.legend"
-                #.data color_scale.domain()
+            #update legend
+            legends = g.select "g.legends"
+                .selectAll "g.legend"
+                .data color_scale.domain()
 
-            #l_enter = legends
-                #.enter()
-                #.append "g"
-                #.classed "legend", true
+            l_enter = legends
+                .enter()
+                .append "g"
+                .classed "legend", true
 
-            #legends
-                #.each (d) ->
-                    #rects = d3.select this
-                        #.selectAll "rect"
-                        #.data [d]
-                    #rects.enter()
-                        #.append "rect"
-                        #.attr "x", width - margin.right - margin.left - 18
-                        #.attr "width", 18
-                        #.attr "height", 18
-                    #rects
-                        #.style "fill", color_scale
-                    #texts = d3.select this
-                        #.selectAll "text"
-                        #.data [d]
-                    #texts.enter()
-                        #.append "text"
-                        #.attr "x", width - margin.right - margin.left - 24
-                        #.attr "y", 9
-                        #.attr "dy", ".35em"
-                        #.style "text-anchor", "end"
-                    #texts
-                        #.text (d) -> d
+            legends
+                .each (d) ->
+                    rects = d3.select this
+                        .selectAll "rect"
+                        .data [d]
+                    rects.enter()
+                        .append "rect"
+                        .attr "x", width - margin.right - margin.left - 18
+                        .attr "width", 18
+                        .attr "height", 18
+                    rects
+                        .style "fill", color_scale
+                    texts = d3.select this
+                        .selectAll "text"
+                        .data [d]
+                    texts.enter()
+                        .append "text"
+                        .attr "x", width - margin.right - margin.left - 24
+                        .attr "y", 9
+                        .attr "dy", ".35em"
+                        .style "text-anchor", "end"
+                    texts
+                        .text (d) -> d
 
-            #legends
-                #.attr "transform", (d, i) -> "translate(0, #{20 * i})"
+            legends
+                .attr "transform", (d, i) -> "translate(0, #{20 * i})"
 
-            #legends
-                #.exit()
-                #.remove()
+            legends
+                .exit()
+                .remove()
 
             #update axes
             g.select ".x.axis"
