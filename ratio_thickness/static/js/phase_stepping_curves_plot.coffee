@@ -23,8 +23,6 @@ d3.chart.phase_stepping = ->
     chart = (selection) ->
         selection.each (pixel) ->
                  
-            console.log data
-            console.log pixel
             col = pixel.col
             row = pixel.row
 
@@ -35,8 +33,6 @@ d3.chart.phase_stepping = ->
             sample_parameters[2] *= flat_parameters[2] / sample_parameters[0]
             sample_parameters[1] += flat_parameters[1]
             sample_parameters[0] *= flat_parameters[0]
-            console.log "flat_parameters", flat_parameters
-            console.log "sample_parameters", sample_parameters
             parameters = [
                 {
                     name: "flat"
@@ -47,7 +43,6 @@ d3.chart.phase_stepping = ->
                     values: sample_parameters
                 }
             ]
-            console.log parameters
             
             #update scales
             n = sample_points.length
@@ -131,8 +126,6 @@ d3.chart.phase_stepping = ->
                 .enter()
                 .append "circle"
                 .classed "circle", true
-
-            console.log circles.data()
 
             circles
                 .transition()
