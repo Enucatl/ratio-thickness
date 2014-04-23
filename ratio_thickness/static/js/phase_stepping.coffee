@@ -80,9 +80,21 @@ jQuery ->
             return console.warn error if error?
             chi_square = d3.chart.image()
                 .color_value (d) -> d
-            d3.select "#chi-square"
+            chi_square_colorbar = Colorbar()
+            placeholder = "#chi-square"
+            d3.select placeholder
                 .data [data]
                 .call chi_square
+            chi_square_colorbar
+                .scale chi_square.color()
+                .height chi_square.height()
+                .width 10
+                .origin {
+                    x: chi_square.width()
+                    y: 0
+                }
+            d3.select placeholder
+                .call chi_square_colorbar
             chi_square.on "line_over", (line) ->
                 d3.select "#phase-stepping-curves"
                     .data [line]
@@ -170,14 +182,20 @@ jQuery ->
                 d3.select image.placeholder
                     .data [data]
                     .call image.image
+                image.colorbar
+                    .scale image.image.color()
+                    .height image.image.height()
+                    .width 10
+                    .origin {
+                        x: image.image.width()
+                        y: 0
+                    }
+                d3.select image.placeholder
+                    .call image.colorbar
                 image.image.on "line_over", (line) ->
                     d3.select "#phase-stepping-curves"
                         .data [line]
                         .call phase_stepping_plot
-                image.colorbar
-                    .scale image.image.color()
-                    .update()
-                console.log "image colorbar origin", image.colorbar.origin()
 
         images.map get_image
 

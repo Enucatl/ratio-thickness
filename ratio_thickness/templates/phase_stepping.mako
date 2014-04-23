@@ -52,10 +52,10 @@
 
 <div class="row">
     <div class="col-md-6" id="chi-square">
-        Chi square
+        Normalized chi square
     </div>
     <div class="col-md-6" id="chi-square-distribution">
-        Chi square distribution
+        Normalized chi square distribution
     </div>
 </div>
 
