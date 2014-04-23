@@ -53,3 +53,7 @@ circle.highlighted {
 .bar {
     fill: darkblue;
 }
+
+.padding-column {
+    padding: 5px 20px;
+}

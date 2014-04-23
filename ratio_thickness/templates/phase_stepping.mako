@@ -15,47 +15,67 @@
 </div>
 
 <div class="row">
-    <div class="col-md-6" id="absorption-image">
-        Absorption
+    <div class="col-md-6">
+        <div class="padding-column" id="absorption-image">
+            Absorption
+        </div>
     </div>
-    <div class="col-md-6" id="phase-stepping-curves">
-        Phase stepping curves
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-6" id="dark-field-image">
-        Dark field
-    </div>
-    <div class="col-md-6" id="flat-absorption">
-        Flat absorption
+    <div class="col-md-6">
+        <div class="padding-column" id="phase-stepping-curves">
+            Phase stepping curves
+        </div>
     </div>
 </div>
 
 <div class="row">
-    <div class="col-md-6" id="phase-image">
-        Differential phase
+    <div class="col-md-6">
+        <div class="padding-column" id="dark-field-image">
+            Dark field
+        </div>
     </div>
-    <div class="col-md-6" id="flat-phase">
-        Flat differential phase
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-6" id="visibility">
-        Visibility map
-    </div>
-    <div class="col-md-6" id="visibility-distribution">
-        Visibility distribution
+    <div class="col-md-6">
+        <div class="padding-column" id="flat-absorption">
+            Flat absorption
+        </div>
     </div>
 </div>
 
 <div class="row">
-    <div class="col-md-6" id="chi-square">
-        Normalized chi square
+    <div class="col-md-6">
+        <div class="padding-column" id="phase-image">
+            Differential phase
+        </div>
     </div>
-    <div class="col-md-6" id="chi-square-distribution">
-        Normalized chi square distribution
+    <div class="col-md-6">
+        <div class="padding-column" id="flat-phase">
+            Flat differential phase
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="padding-column" id="visibility">
+            Visibility map
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="padding-column" id="visibility-distribution">
+            Visibility distribution
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="padding-column" id="chi-square">
+            Normalized chi square
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="padding-column" id="chi-square-distribution">
+            Normalized chi square distribution
+        </div>
     </div>
 </div>
 
