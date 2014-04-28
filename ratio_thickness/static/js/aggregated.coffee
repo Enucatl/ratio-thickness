@@ -53,6 +53,16 @@ jQuery ->
                     x_value: (d, i) -> d[1]
                     y_value: (d, i) -> d[2]
                 },
+                { 
+                    placeholder: "#transmission-df"
+                    plot: d3.chart.scatter()
+                    x_scale_domain: [0, 1]
+                    y_scale_domain: [0, 1]
+                    x_title: "transmission"
+                    y_title: "dark-field"
+                    x_value: (d, i) -> d[0]
+                    y_value: (d, i) -> d[1]
+                },
             ]        
 
 

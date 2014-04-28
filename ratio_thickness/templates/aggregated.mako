@@ -23,6 +23,14 @@
     </div>
 </div>
 
+<div class="row">
+    <div class="col-md-6" id="transmission-df">
+        Dark-field as a function of transmission
+    </div>
+    <div class="col-md-6">
+    </div>
+</div>
+
 <h2>Description</h2>
 <div class="row">
     <div class="col-md-12">
