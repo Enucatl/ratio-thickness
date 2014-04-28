@@ -11,8 +11,6 @@ astroid==1.0.1
 colander==1.0b1
 deform==0.9.9
 deform-bootstrap==0.2.9
--e git+git@bitbucket.org:psitomcat/dpc_reconstruction.git@60855ad2b672641cb0b6bc2c811887cc411c3968#egg=dpc_reconstruction-master
--e git+git@bitbucket.org:Enucatl/get_git_version.git@0612bf463db462ab5e365ebca3ccdc2ab8c9e47d#egg=get_git_version-master
 greenlet==0.4.2
 h5py==2.2.1
 ipython==1.2.1
@@ -27,7 +25,6 @@ pylint==1.1.0
 pyparsing==2.0.1
 pypes==3
 pyramid==1.4.5
--e git+git@github.com:Enucatl/pyramid_assetmutator.git@d031d3d3ad7504e9663b366d9d09680d2d9d31a0#egg=pyramid_assetmutator-master
 pyramid-debugtoolbar==2.0.2
 pyramid-haml==0.1.2
 pyramid-jinja2==1.10
@@ -35,8 +32,6 @@ pyramid-mako==1.0a2
 pytest==2.5.2
 python-dateutil==2.2
 pyzmq==14.1.1
--e git+git@github.com:Enucatl/r_distribution.git@dd271f0acae3c4bfcfebf73d62eddff0672f4233#egg=r_distribution-master
--e git+git@bitbucket.org:Enucatl/ratio_thickness.git@efa3f8e7e77dc9ab81f964c07be87d6f9248feee#egg=ratio_thickness-master
 repoze.lru==0.6
 scipy==0.13.3
 six==1.5.2
