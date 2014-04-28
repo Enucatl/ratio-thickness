@@ -1,15 +1,15 @@
 [submodule "ratio_thickness/static/js/d3.scatter"]
 	path = ratio_thickness/static/js/d3.scatter
-	url = git@github.com:Enucatl/d3.scatter.git
+	url = https://github.com/Enucatl/d3.scatter.git
 [submodule "ratio_thickness/static/js/d3.image"]
 	path = ratio_thickness/static/js/d3.image
-	url = git@github.com:Enucatl/d3.image.git
+	url = https://github.com/Enucatl/d3.image.git
 [submodule "ratio_thickness/static/js/d3.slider"]
 	path = ratio_thickness/static/js/d3.slider
-	url = git@github.com:Enucatl/d3.slider.git
+	url = https://github.com/Enucatl/d3.slider.git
 [submodule "ratio_thickness/static/js/d3.histogram"]
 	path = ratio_thickness/static/js/d3.histogram
-	url = git@github.com:Enucatl/d3.histogram.git
+	url = https://github.com/Enucatl/d3.histogram.git
 [submodule "ratio_thickness/static/js/d3.colorbar"]
 	path = ratio_thickness/static/js/d3.colorbar
-	url = https://github.com/bmschmidt/colorbar.git
+	url = https://github.com/Enucatl/d3.colorbar.git
