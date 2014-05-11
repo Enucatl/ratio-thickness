@@ -12,7 +12,7 @@ requires = [
     ]
 
 setup(name='ratio_thickness',
-      version='0.0',
+      version='1.0',
       description='ratio_thickness',
       long_description=README + '\n\n' + CHANGES,
       classifiers=[
