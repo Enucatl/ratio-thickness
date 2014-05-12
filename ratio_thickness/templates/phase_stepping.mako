@@ -5,7 +5,6 @@
         <p>
             Phase stepping curve reconstruction.
         </p>
-
     </div>
 </div>
 
@@ -16,65 +15,85 @@
 
 <div class="row">
     <div class="col-md-6">
-        <div class="padding-column" id="absorption-image">
+        <p>
             Absorption
+        </p>
+        <div id="absorption-image">
         </div>
     </div>
     <div class="col-md-6">
-        <div class="padding-column" id="phase-stepping-curves">
+        <p>
             Phase stepping curves
+        </p>
+        <div id="phase-stepping-curves">
         </div>
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-6">
-        <div class="padding-column" id="dark-field-image">
+        <p>
             Dark field
+        </p>
+        <div id="dark-field-image">
         </div>
     </div>
     <div class="col-md-6">
-        <div class="padding-column" id="flat-absorption">
+        <p>
             Flat absorption
+        </p>
+        <div id="flat-absorption">
         </div>
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-6">
-        <div class="padding-column" id="phase-image">
+        <p>
             Differential phase
+        </p>
+        <div id="phase-image">
         </div>
     </div>
     <div class="col-md-6">
-        <div class="padding-column" id="flat-phase">
+        <p>
             Flat differential phase
+        </p>
+        <div id="flat-phase">
         </div>
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-6">
-        <div class="padding-column" id="visibility">
+        <p>
             Visibility map
+        </p>
+        <div id="visibility">
         </div>
     </div>
     <div class="col-md-6">
-        <div class="padding-column" id="visibility-distribution">
+        <p>
             Visibility distribution
+        </p>
+        <div id="visibility-distribution">
         </div>
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-6">
-        <div class="padding-column" id="chi-square">
+        <p>
             Normalized chi square
+        </p>
+        <div id="chi-square">
         </div>
     </div>
     <div class="col-md-6">
-        <div class="padding-column" id="chi-square-distribution">
+        <p>
             Normalized chi square distribution
+        </p>
+        <div id="chi-square-distribution">
         </div>
     </div>
 </div>

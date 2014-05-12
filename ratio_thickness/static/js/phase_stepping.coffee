@@ -87,12 +87,15 @@ jQuery ->
                 .call chi_square
             chi_square_colorbar
                 .scale chi_square.color()
-                .height chi_square.height()
-                .width 10
+                .margin chi_square.margin()
+                .barlength chi_square.height()
+                .thickness 10
                 .origin {
-                    x: chi_square.width()
-                    y: 0
+                    x: chi_square.width() + chi_square.margin().left + chi_square.margin().right
+                    y: chi_square.margin().top
                 }
+                .image_thickness chi_square.height() 
+                .image_length chi_square.width() 
             d3.select placeholder
                 .call chi_square_colorbar
             chi_square.on "line_over", (line) ->
@@ -119,6 +122,8 @@ jQuery ->
                 .data [flattened]
                 .call histogram
 
+            $(placeholder).height(width * factor)
+
         get_request().post get_request_object("postprocessing/visibility"), (error, data) ->
             return console.warn error if error?
             flattened = data.reduce (a, b) -> a.concat b
@@ -141,6 +146,8 @@ jQuery ->
                 .data [flattened]
                 .call histogram
 
+            $(placeholder).height width * factor
+
         #request phase stepping curves
         phase_stepping_data = {}
         phase_stepping_plot = d3.chart.phase_stepping()
@@ -149,6 +156,7 @@ jQuery ->
             flattened = data.reduce (a, b) -> a.concat b
             placeholder = "#phase-stepping-curves"
             width = $(placeholder).width()
+            $(placeholder).height(width * factor)
             phase_stepping_data.phase_stepping_curves = {
                 name: "phase_stepping_curves"
                 values: data
@@ -182,14 +190,21 @@ jQuery ->
                 d3.select image.placeholder
                     .data [data]
                     .call image.image
+
+                $(image.placeholder).height(image.image.height() + image.image.margin().top + image.image.margin().bottom)
+
                 image.colorbar
                     .scale image.image.color()
-                    .height image.image.height()
-                    .width 10
                     .origin {
-                        x: image.image.width()
-                        y: 0
+                        x: image.image.width() + image.image.margin().left + image.image.margin().right
+                        y: image.image.margin().top
                     }
+                    .margin image.image.margin()
+                    .barlength image.image.height()
+                    .thickness 10
+                    .image_thickness image.image.width()
+                    .image_length image.image.height()
+
                 d3.select image.placeholder
                     .call image.colorbar
                 image.image.on "line_over", (line) ->

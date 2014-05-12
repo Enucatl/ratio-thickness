@@ -67,3 +67,7 @@ canvas {
     image-rendering: optimize-contrast;         // Possible future browsers.
     -ms-interpolation-mode: nearest-neighbor;   // IE
 }
+
+canvas, svg {
+    position: absolute;
+}
