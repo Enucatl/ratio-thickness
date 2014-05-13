@@ -3,3 +3,4 @@ static/bootstrap*
 *__pycache__*
 pyramid.log
 pyramid.pid
+*.json

@@ -4,7 +4,10 @@ jQuery ->
         slider = d3.chart.slider()
             .width $("#slider").width()
             .height 100
+            .margin {top: 0, right: 40, bottom: 0, left: 40}
             .x_title "maximum log ratio"
+
+        $("#slider").height(slider.margin().top + slider.margin().bottom + slider.height())
 
         slider
             .x_axis()
@@ -27,11 +30,13 @@ jQuery ->
             .x_title "color coding"
             .x color_slider_scale
             .x_axis color_slider_axis
-            .margin {top: 20, right: 40, bottom: 20, left: 40}
+            .margin {top: 0, right: 40, bottom: 0, left: 40}
 
         d3.select "#color-slider"
             .data [0]
             .call color_slider
+
+        $("#color-slider").height(color_slider.margin().top + color_slider.margin().bottom + color_slider.height())
 
         plots = [{ 
                     placeholder: "#ratio-abs"
@@ -91,6 +96,9 @@ jQuery ->
                     d3.select plot.placeholder
                         .data [data]
                         .call plot.plot
+
+                    margin = plot.plot.margin()
+                    $(plot.placeholder).height width * factor + margin.top + margin.bottom
 
                 slider.on "slider_brushended", (maximum) ->
                     for plot in plots

@@ -40,26 +40,9 @@
     </div>
     <div class="col-md-6">
         <p>
-            Flat absorption
-        </p>
-        <div id="flat-absorption">
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-6">
-        <p>
             Differential phase
         </p>
         <div id="phase-image">
-        </div>
-    </div>
-    <div class="col-md-6">
-        <p>
-            Flat differential phase
-        </p>
-        <div id="flat-phase">
         </div>
     </div>
 </div>
@@ -94,6 +77,23 @@
             Normalized chi square distribution
         </p>
         <div id="chi-square-distribution">
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <p>
+            Flat differential phase
+        </p>
+        <div id="flat-phase">
+        </div>
+    </div>
+    <div class="col-md-6">
+        <p>
+            Flat absorption
+        </p>
+        <div id="flat-absorption">
         </div>
     </div>
 </div>

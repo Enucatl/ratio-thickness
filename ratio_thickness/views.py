@@ -212,6 +212,7 @@ def get_aggregated_output(request):
         })
     unused_socket.close()
     socket.close()
+    print(averages, file=open("aggregated.json", "w"))
     return averages
 
 

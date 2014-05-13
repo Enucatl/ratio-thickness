@@ -3,29 +3,49 @@
 
 <h2>Controls</h2>
 <div class="row">
-    <div class="col-md-4" id="slider">
+    <div class="col-md-6">
+    <p>
         Slide to change the maximum on the y scale
+    </p>
+    <div id="slider">
+    </div>
     </div>
 </div>
 <div class="row">
-    <div class="col-md-4" id="color-slider">
+    <div class="col-md-6">
+    <p>
         Slide to change the color scale
+    </p>
+    <div id="color-slider">
+    </div>
     </div>
 </div>
 
 <h2>Plot</h2>
 <div class="row">
-    <div class="col-md-6" id="ratio-abs">
+    <div class="col-md-6">
+    <p>
         Log ratio as a function of transmission
+    </p>
+    <div id="ratio-abs">
     </div>
-    <div class="col-md-6" id="ratio-df">
+    </div>
+    <div class="col-md-6">
+    <p>
         Log ratio as a function of dark field
+    </p>
+    <div id="ratio-df">
+    </div>
     </div>
 </div>
 
 <div class="row">
-    <div class="col-md-6" id="transmission-df">
+    <div class="col-md-6">
+    <p>
         Dark-field as a function of transmission
+    </p>
+    <div id="transmission-df">
+    </div>
     </div>
     <div class="col-md-6">
     </div>

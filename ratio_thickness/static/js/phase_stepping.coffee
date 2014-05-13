@@ -98,10 +98,12 @@ jQuery ->
                 .image_length chi_square.width() 
             d3.select placeholder
                 .call chi_square_colorbar
+
             chi_square.on "line_over", (line) ->
                 d3.select "#phase-stepping-curves"
                     .data [line]
                     .call phase_stepping_plot
+
             flattened = data.reduce (a, b) -> a.concat b
             placeholder = "#chi-square-distribution"
             width = $(placeholder).width()
@@ -196,17 +198,19 @@ jQuery ->
                 image.colorbar
                     .scale image.image.color()
                     .origin {
-                        x: image.image.width() + image.image.margin().left + image.image.margin().right
-                        y: image.image.margin().top
+                        x: image.image.margin().left
+                        y: image.image.margin().top + image.image.height()
                     }
                     .margin image.image.margin()
-                    .barlength image.image.height()
+                    .barlength image.image.width()
                     .thickness 10
-                    .image_thickness image.image.width()
-                    .image_length image.image.height()
+                    .image_thickness image.image.height()
+                    .image_length image.image.width()
+                    .orient "horizontal"
 
                 d3.select image.placeholder
                     .call image.colorbar
+
                 image.image.on "line_over", (line) ->
                     d3.select "#phase-stepping-curves"
                         .data [line]

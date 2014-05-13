@@ -50,29 +50,47 @@
 
 <div class="row">
     <div class="col-md-6" id="images">
-        <div class="col-md-12" id="abs-image">
+        <p>
             Absorption
+        </p>
+        <div class="col-md-12" id="abs-image">
         </div>
-        <div class="col-md-12" id="df-image">
+        <p>
             Dark field
+        </p>
+        <div class="col-md-12" id="df-image">
         </div>
     </div>
-    <div class="col-md-6" id="profiles">
+    <p>
         Profiles
+    </p>
+    <div class="col-md-6" id="profiles">
     </div>
 </div>
 
 <h2>Ratio</h2>
 
 <div class="row" id="ratio-plots">
-    <div class="col-md-4" id="ratio-position">
-        Log ratio for the rows above
+    <div class="col-md-4">
+        <p>
+            Log ratio for the rows above
+        </p>
+        <div id="ratio-position">
+        </div>
     </div>
-    <div class="col-md-4" id="ratio-abs">
-        Log ratio as a function of transmission
+    <div class="col-md-4">
+        <p>
+            as a function of transmission
+        </p>
+        <div id="ratio-abs">
+        </div>
     </div>
-    <div class="col-md-4" id="ratio-df">
-        Log ratio as a function of dark field
+    <div class="col-md-4">
+        <p>
+            as a function of dark field
+        </p>
+        <div id="ratio-df">
+        </div>
     </div>
 </div>
 

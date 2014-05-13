@@ -29,6 +29,9 @@ jQuery ->
                 .data [json]
                 .call df_image
 
+            $("#abs-image").height abs_image.height() + abs_image.margin().top + abs_image.margin().bottom
+            $("#df-image").height df_image.height() + df_image.margin().top + df_image.margin().bottom
+
             profile_data = {
                 row: 0
                 values: json[0]
@@ -37,14 +40,19 @@ jQuery ->
             width = $("#profiles").width()
             profiles.width width
             profiles.height factor * width
+            $("#profiles").height factor * width
             d3.select "#profiles"
                 .data [profile_data]
                 .call profiles
 
             for image in [abs_image, df_image]
                 image.on "line_over", (line) ->
+                    profile_data = {
+                        row: line.row
+                        values: json[line.row]
+                    }
                     d3.select "#profiles"
-                        .data [line]
+                        .data [profile_data]
                         .call profiles
 
         d3.json "/pipelineoutput/40001", (error, json) ->
@@ -101,6 +109,8 @@ jQuery ->
                 d3.select plot.placeholder
                     .data [data]
                     .call plot.plot
+
+                $(plot.placeholder).height width * factor
 
     $("#select-dataset").change ->
         file = $(this).val()
