@@ -165,13 +165,10 @@ jQuery ->
                     .scale image.image.color()
                     .origin {
                         x: margin.left
-                        y: margin.top + image.image.height()
+                        y: image.image.height() + margin.top
                     }
-                    .margin margin
                     .barlength image.image.width()
                     .thickness 10
-                    .image_thickness image.image.height()
-                    .image_length image.image.width()
                     .orient "horizontal"
 
                 d3.select image.placeholder
