@@ -179,11 +179,12 @@ jQuery ->
                 if image.histogram
                     histogram_placeholder = image.placeholder + "-distribution"
                     flattened = data.reduce (a, b) -> a.concat b
+                    sorted = flattened.sort()
                     width = $(histogram_placeholder).width()
                     $(histogram_placeholder).height(width * factor)
                     image.histogram
                         .x_scale()
-                        .domain [0, d3.max(flattened)]
+                        .domain [0, d3.quantile(sorted, 0.98)]
                         .nice()
                     image.histogram
                         .margin {top: 20, right: 20, bottom: 20, left: 50}
