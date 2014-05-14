@@ -2,8 +2,8 @@ jQuery ->
 
     window.loadreconstruction = (title, filename) ->
 
-        get_request = ->
-            request = d3.xhr "/hdf5dataset"
+        get_request = (url) ->
+            request = d3.xhr url
             request.mimeType "application/json"
             request.response (request) ->
                 JSON.parse request.responseText
@@ -20,140 +20,104 @@ jQuery ->
         factor = 0.618
         images = [
             {
+                url: "/hdf5dataset"
                 file: filename
                 dataset: "postprocessing/dpc_reconstruction"
                 placeholder: "#absorption-image"
                 image: d3.chart.image()
                 colorbar: Colorbar()
+                histogram: false
+                title: "transmission"
             },
             {
+                url: "/hdf5dataset"
                 file: filename
                 dataset: "postprocessing/dpc_reconstruction"
                 placeholder: "#dark-field-image"
                 image: d3.chart.image()
                     .color_value (d) -> d[2]
                 colorbar: Colorbar()
+                histogram: false
+                title: "dark field"
             },
             {
+                url: "/hdf5dataset"
                 file: filename
                 dataset: "postprocessing/dpc_reconstruction"
                 placeholder: "#phase-image"
                 image: d3.chart.image()
                     .color_value (d) -> d[1]
                 colorbar: Colorbar()
+                histogram: false
+                title: "phase"
             },
             {
+                url: "/hdf5dataset"
                 file: filename
                 dataset: "postprocessing/visibility"
                 placeholder: "#visibility"
                 image: d3.chart.image()
                     .color_value (d) -> d
                 colorbar: Colorbar()
+                histogram: false
+                title: "visibility"
             },
             {
+                url: "/hdf5dataset"
                 file: filename
                 dataset: "postprocessing/flat_parameters"
                 placeholder: "#flat-phase"
                 image: d3.chart.image()
                     .color_value (d) -> d[1]
                 colorbar: Colorbar()
+                histogram: false
+                title: "flat phase"
             },
             {
+                url: "/hdf5dataset"
                 file: filename
                 dataset: "postprocessing/flat_parameters"
                 placeholder: "#flat-absorption"
                 image: d3.chart.image()
                     .color_value (d) -> d[0]
                 colorbar: Colorbar()
+                histogram: false
+                title: "flat transmission"
+            },
+            {
+                url: "/normalizedchisquare"
+                file: filename
+                dataset: ""
+                placeholder: "#chi-square"
+                image: d3.chart.image()
+                    .color_value (d) -> d
+                colorbar: Colorbar()
+                histogram: d3.chart.histogram()
+                title: "normalized χ²"
+            },
+            {
+                url: "/hdf5dataset"
+                file: filename
+                dataset: "postprocessing/visibility"
+                placeholder: "#visibility"
+                image: d3.chart.image()
+                    .color_value (d) -> d
+                colorbar: Colorbar()
+                histogram: d3.chart.histogram()
+                title: "visibility"
             },
         ]
 
-        request = d3.xhr "/normalizedchisquare"
-        request.mimeType "application/json"
-        request.response (request) ->
-            JSON.parse request.responseText
-        request
-        request_object = JSON.stringify({
-                file: filename
-            })     
-        request.post request_object, (error, data) ->
-            return console.warn error if error?
-            chi_square = d3.chart.image()
-                .color_value (d) -> d
-            chi_square_colorbar = Colorbar()
-            placeholder = "#chi-square"
-            d3.select placeholder
-                .data [data]
-                .call chi_square
-            chi_square_colorbar
-                .scale chi_square.color()
-                .margin chi_square.margin()
-                .barlength chi_square.height()
-                .thickness 10
-                .origin {
-                    x: chi_square.width() + chi_square.margin().left + chi_square.margin().right
-                    y: chi_square.margin().top
-                }
-                .image_thickness chi_square.height() 
-                .image_length chi_square.width() 
-            d3.select placeholder
-                .call chi_square_colorbar
-
-            chi_square.on "line_over", (line) ->
-                d3.select "#phase-stepping-curves"
-                    .data [line]
-                    .call phase_stepping_plot
-
-            flattened = data.reduce (a, b) -> a.concat b
-            placeholder = "#chi-square-distribution"
-            width = $(placeholder).width()
-            histogram = d3.chart.histogram()
-            histogram
-                .x_scale()
-                .domain [0, d3.max(flattened)]
-                .nice()
-            histogram
-                .margin {top: 20, right: 20, bottom: 20, left: 50}
-                .n_bins 50
-                .width width
-                .height width * factor
-                .value (d) -> d
-                .x_title "normalized χ²"
-                .y_title "pixels"
-            d3.select placeholder
-                .data [flattened]
-                .call histogram
-
-            $(placeholder).height(width * factor)
-
-        get_request().post get_request_object("postprocessing/visibility"), (error, data) ->
-            return console.warn error if error?
-            flattened = data.reduce (a, b) -> a.concat b
-            placeholder = "#visibility-distribution"
-            width = $(placeholder).width()
-            histogram = d3.chart.histogram()
-            histogram
-                .x_scale()
-                .domain [0, 1.2 * d3.max flattened]
-                .nice()
-            histogram
-                .margin {top: 20, right: 20, bottom: 20, left: 50}
-                .n_bins 50
-                .width width
-                .height width * factor
-                .value (d) -> d
-                .x_title "visibility"
-                .y_title "pixels"
-            d3.select placeholder
-                .data [flattened]
-                .call histogram
-
-            $(placeholder).height width * factor
-
-        #request phase stepping curves
+        # request phase stepping curves
         phase_stepping_data = {}
         phase_stepping_plot = d3.chart.phase_stepping()
-        get_request().post get_request_object("postprocessing/phase_stepping_curves"), (error, data) ->
+
+        line_over_update_ps_plot = (line) ->
+            d3.select "#phase-stepping-curves"
+                .data [line]
+                .call phase_stepping_plot
+ 
+        get_request("/hdf5dataset").post get_request_object("postprocessing/phase_stepping_curves"), (error, data) ->
             return console.warn error if error?
             flattened = data.reduce (a, b) -> a.concat b
             placeholder = "#phase-stepping-curves"
@@ -163,13 +127,13 @@ jQuery ->
                 name: "phase_stepping_curves"
                 values: data
             }
-            get_request().post get_request_object("postprocessing/flat_parameters"), (error, flatpars) ->
+            get_request("/hdf5dataset").post get_request_object("postprocessing/flat_parameters"), (error, flatpars) ->
                 return console.warn error if error?
                 phase_stepping_data.flat_parameters = {
                     name: "flat"
                     values: flatpars
                 }
-                get_request().post get_request_object("postprocessing/dpc_reconstruction"), (error, dpcreco) ->
+                get_request("/hdf5dataset").post get_request_object("postprocessing/dpc_reconstruction"), (error, dpcreco) ->
                     return console.warn error if error?
                     phase_stepping_data.sample_parameters = {
                         name: "sample"
@@ -187,21 +151,25 @@ jQuery ->
 
         get_image = (image) ->
             #request data
-            get_request().post get_request_object(image.dataset), (error, data) ->
+            get_request(image.url).post get_request_object(image.dataset), (error, data) ->
                 return console.warn error if error?
+
+                image.image.on "line_over", line_over_update_ps_plot
+
                 d3.select image.placeholder
                     .data [data]
                     .call image.image
 
-                $(image.placeholder).height(image.image.height() + image.image.margin().top + image.image.margin().bottom)
+                margin = image.image.margin()
+                $(image.placeholder).height(image.image.height() + margin.top + margin.bottom)
 
                 image.colorbar
                     .scale image.image.color()
                     .origin {
-                        x: image.image.margin().left
-                        y: image.image.margin().top + image.image.height()
+                        x: margin.left
+                        y: margin.top + image.image.height()
                     }
-                    .margin image.image.margin()
+                    .margin margin
                     .barlength image.image.width()
                     .thickness 10
                     .image_thickness image.image.height()
@@ -211,10 +179,27 @@ jQuery ->
                 d3.select image.placeholder
                     .call image.colorbar
 
-                image.image.on "line_over", (line) ->
-                    d3.select "#phase-stepping-curves"
-                        .data [line]
-                        .call phase_stepping_plot
+                if image.histogram
+                    histogram_placeholder = image.placeholder + "-distribution"
+                    console.log histogram_placeholder
+                    flattened = data.reduce (a, b) -> a.concat b
+                    width = $(histogram_placeholder).width()
+                    $(histogram_placeholder).height(width * factor)
+                    image.histogram
+                        .x_scale()
+                        .domain [0, d3.max(flattened)]
+                        .nice()
+                    image.histogram
+                        .margin {top: 20, right: 20, bottom: 20, left: 50}
+                        .n_bins 50
+                        .width width
+                        .height width * factor
+                        .value (d) -> d
+                        .x_title image.title
+                        .y_title "pixels"
+                    d3.select histogram_placeholder
+                        .data [flattened]
+                        .call image.histogram
 
         images.map get_image
 
