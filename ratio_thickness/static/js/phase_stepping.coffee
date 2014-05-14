@@ -112,7 +112,6 @@ jQuery ->
         phase_stepping_plot = d3.chart.phase_stepping()
 
         line_over_update_ps_plot = (line) ->
-            console.log line
             d3.select "#phase-stepping-curves"
                 .data [line]
                 .call phase_stepping_plot
