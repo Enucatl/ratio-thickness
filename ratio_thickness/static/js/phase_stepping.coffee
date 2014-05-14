@@ -15,7 +15,6 @@ jQuery ->
                     dataset: datasetname
                 })     
 
-
         $("#page-title").text("Dataset reconstruction: #{title}")
         factor = 0.618
         images = [
@@ -113,6 +112,7 @@ jQuery ->
         phase_stepping_plot = d3.chart.phase_stepping()
 
         line_over_update_ps_plot = (line) ->
+            console.log line
             d3.select "#phase-stepping-curves"
                 .data [line]
                 .call phase_stepping_plot
@@ -154,8 +154,6 @@ jQuery ->
             get_request(image.url).post get_request_object(image.dataset), (error, data) ->
                 return console.warn error if error?
 
-                image.image.on "line_over", line_over_update_ps_plot
-
                 d3.select image.placeholder
                     .data [data]
                     .call image.image
@@ -179,9 +177,11 @@ jQuery ->
                 d3.select image.placeholder
                     .call image.colorbar
 
+                image.image.on "line_over", line_over_update_ps_plot
+
+
                 if image.histogram
                     histogram_placeholder = image.placeholder + "-distribution"
-                    console.log histogram_placeholder
                     flattened = data.reduce (a, b) -> a.concat b
                     width = $(histogram_placeholder).width()
                     $(histogram_placeholder).height(width * factor)
