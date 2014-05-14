@@ -3,6 +3,7 @@ import pypes.packet
 import zmq
 import h5py
 import numpy as np
+import json
 
 
 @view_config(route_name='datasets', renderer='json')
@@ -212,7 +213,8 @@ def get_aggregated_output(request):
         })
     unused_socket.close()
     socket.close()
-    print(averages, file=open("aggregated.json", "w"))
+    with open("aggregated.json", "w") as json_output:
+        json.dump(averages, json_output)
     return averages
 
 
