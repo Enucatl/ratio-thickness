@@ -187,7 +187,6 @@ jQuery ->
                         .domain [0, d3.quantile(sorted, 0.98)]
                         .nice()
                     image.histogram
-                        .margin {top: 20, right: 20, bottom: 20, left: 50}
                         .n_bins 50
                         .width width
                         .height width * factor
