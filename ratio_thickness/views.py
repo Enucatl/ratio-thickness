@@ -9,6 +9,21 @@ import json
 @view_config(route_name='datasets', renderer='json')
 def get_datasets(request):
     datasets = [
+
+        {
+            "name": "Sugar",
+            "file": "ratio_thickness/static/data/S00001_S00100.hdf5",
+            "a (mm)": 50,
+            "b (mm)": 6.3,
+            "simulated": False,
+        },
+        {
+            "name": "Fish",
+            "file": "ratio_thickness/static/data/S00011_S00250.hdf5",
+            "a (mm)": 50,
+            "b (mm)": 6.3,
+            "simulated": False,
+        },
         {
             "name": "Teflon",
             "file": "ratio_thickness/static/data/S00208_S00307.hdf5",
