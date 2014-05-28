@@ -71,7 +71,7 @@ def multiple_outputs_reader(m=2, index=0):
 
 def average_function(a, w):
     "average over last axis"
-    return (np.average(a, axis=-1, weights=w),)
+    return (np.average(np.nan_to_num(a), axis=-1, weights=w),)
 
 
 def average():

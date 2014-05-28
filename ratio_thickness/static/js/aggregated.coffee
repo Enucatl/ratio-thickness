@@ -42,7 +42,7 @@ jQuery ->
                     placeholder: "#ratio-abs"
                     plot: d3.chart.scatter()
                     x_scale_domain: [0, 1]
-                    y_scale_domain: [0, 1]
+                    y_scale_domain: [0, 5]
                     x_title: "transmission"
                     y_title: "log ratio"
                     x_value: (d, i) -> d[0]
@@ -52,7 +52,7 @@ jQuery ->
                     placeholder: "#ratio-df"
                     plot: d3.chart.scatter()
                     x_scale_domain: [0, 1]
-                    y_scale_domain: [0, 1]
+                    y_scale_domain: [0, 5]
                     x_title: "dark field"
                     y_title: "log ratio"
                     x_value: (d, i) -> d[1]
@@ -81,6 +81,7 @@ jQuery ->
                 JSON.parse request.responseText
             request.post JSON.stringify(datasets), (error, data) ->
                 return console.warn error if error?
+                console.log data
                 for plot in plots
                     width = $(plot.placeholder).width()
                     plot.plot.width width
@@ -102,6 +103,8 @@ jQuery ->
 
                 slider.on "slider_brushended", (maximum) ->
                     for plot in plots
+                        if plot.placeholder == "#transmission-df"
+                            continue
                         plot.y_scale_domain[1] = maximum
                         plot.plot.y_scale()
                             .domain plot.y_scale_domain
