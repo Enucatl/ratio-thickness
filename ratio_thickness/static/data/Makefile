@@ -1,26 +1,39 @@
-S00108_S00207.hdf5:
-	flats_every.py -o --steps 19 --flats_every 5 --n_flats 5 /afs/psi.ch/project/hedpc/raw_data/2013/ccdfli/2014.04.07/S00000-00999/S00{108..207}.hdf5
+.PHONY: all
 
-S00208_S00307.hdf5:
-	flats_every.py -o --steps 19 --flats_every 5 --n_flats 5 /afs/psi.ch/project/hedpc/raw_data/2013/ccdfli/2014.04.07/S00000-00999/S00{208..307}.hdf5
+all: S00103_S00202.hdf5 S00003_S00102.hdf5 S00001_S00100.hdf5 S00101_S00200.hdf5 S00201_S00300.hdf5 S00301_S00400.hdf5 S00401_S00500.hdf5 S00501_S00600.hdf5 S00011_S00250.hdf5
 
-S00315_S00414.hdf5:
-	flats_every.py -o --steps 19 --flats_every 5 --n_flats 5 /afs/psi.ch/project/hedpc/raw_data/2013/ccdfli/2014.04.10/S00000-00999/S00{315..414}.hdf5
+S00011_S00250.hdf5:
+	flats_every.py -o --steps 19 --flats_every 1 --n_flats 1 /afs/psi.ch/project/hedpc/raw_data/2013/ccdfli/2014.05.21/S00000-00999/S00{011..250}.hdf5
+	ln -s /afs/psi.ch/project/hedpc/raw_data/2013/ccdfli/2014.05.21/S00000-00999/$@ .
 
-S00415_S00514.hdf5:
-	flats_every.py -o --steps 19 --flats_every 5 --n_flats 5 /afs/psi.ch/project/hedpc/raw_data/2013/ccdfli/2014.04.10/S00000-00999/S00{415..514}.hdf5
+S00103_S00202.hdf5:
+	flats_every.py -o --steps 19 --flats_every 1 --n_flats 1 /afs/psi.ch/project/hedpc/raw_data/2013/ccdfli/2014.05.22/S00000-00999/S00{103..202}.hdf5
+	ln -s /afs/psi.ch/project/hedpc/raw_data/2013/ccdfli/2014.05.22/S00000-00999/$@ .
 
-S00678_S00717.hdf5:
-	flats_every.py -o --steps 9 --flats_every 5 --n_flats 5 /afs/psi.ch/project/hedpc/raw_data/2013/ccdfli/2014.03.05/S00000-00999/S00{678..717}.hdf5
+S00003_S00102.hdf5:
+	flats_every.py -o --steps 19 --flats_every 1 --n_flats 1 /afs/psi.ch/project/hedpc/raw_data/2013/ccdfli/2014.05.22/S00000-00999/S00{003..102}.hdf5
+	ln -s /afs/psi.ch/project/hedpc/raw_data/2013/ccdfli/2014.05.22/S00000-00999/$@ .
 
-S00758_S00797.hdf5:
-	flats_every.py -o --steps 9 --flats_every 5 --n_flats 5 /afs/psi.ch/project/hedpc/raw_data/2013/ccdfli/2014.03.05/S00000-00999/S00{758..797}.hdf5
+S00001_S00100.hdf5:
+	flats_every.py -o --steps 19 --flats_every 1 --n_flats 1 /afs/psi.ch/project/hedpc/raw_data/2013/ccdfli/2014.05.26/S00000-00999/S00{001..100}.hdf5
+	ln -s /afs/psi.ch/project/hedpc/raw_data/2013/ccdfli/2014.05.26/S00000-00999/$@ .
 
-S00638_S00677.hdf5:
-	flats_every.py -o --steps 9 --flats_every 5 --n_flats 5 /afs/psi.ch/project/hedpc/raw_data/2013/ccdfli/2014.03.05/S00000-00999/S00{638..677}.hdf5
+S00101_S00200.hdf5:
+	flats_every.py -o --steps 19 --flats_every 1 --n_flats 1 /afs/psi.ch/project/hedpc/raw_data/2013/ccdfli/2014.05.26/S00000-00999/S00{101..200}.hdf5
+	ln -s /afs/psi.ch/project/hedpc/raw_data/2013/ccdfli/2014.05.26/S00000-00999/$@ .
 
-S00718_S00757.hdf5:
-	flats_every.py -o --steps 9 --flats_every 5 --n_flats 5 /afs/psi.ch/project/hedpc/raw_data/2013/ccdfli/2014.03.05/S00000-00999/S00{718..757}.hdf5
-	
-S00918_S00957.hdf5:
-	flats_every.py -o --steps 9 --flats_every 5 --n_flats 5 /afs/psi.ch/project/hedpc/raw_data/2013/ccdfli/2014.03.05/S00000-00999/S00{918..957}.hdf5
+S00201_S00300.hdf5:
+	flats_every.py -o --steps 19 --flats_every 1 --n_flats 1 /afs/psi.ch/project/hedpc/raw_data/2013/ccdfli/2014.05.26/S00000-00999/S00{201..300}.hdf5
+	ln -s /afs/psi.ch/project/hedpc/raw_data/2013/ccdfli/2014.05.26/S00000-00999/$@ .
+
+S00301_S00400.hdf5:
+	flats_every.py -o --steps 19 --flats_every 1 --n_flats 1 /afs/psi.ch/project/hedpc/raw_data/2013/ccdfli/2014.05.26/S00000-00999/S00{301..400}.hdf5
+	ln -s /afs/psi.ch/project/hedpc/raw_data/2013/ccdfli/2014.05.26/S00000-00999/$@ .
+
+S00401_S00500.hdf5:
+	flats_every.py -o --steps 19 --flats_every 1 --n_flats 1 /afs/psi.ch/project/hedpc/raw_data/2013/ccdfli/2014.05.26/S00000-00999/S00{401..500}.hdf5
+	ln -s /afs/psi.ch/project/hedpc/raw_data/2013/ccdfli/2014.05.26/S00000-00999/$@ .
+
+S00501_S00600.hdf5:
+	flats_every.py -o --steps 19 --flats_every 1 --n_flats 1 /afs/psi.ch/project/hedpc/raw_data/2013/ccdfli/2014.05.26/S00000-00999/S00{501..600}.hdf5
+	ln -s /afs/psi.ch/project/hedpc/raw_data/2013/ccdfli/2014.05.26/S00000-00999/$@ .

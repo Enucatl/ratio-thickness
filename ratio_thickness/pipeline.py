@@ -19,13 +19,50 @@ from pypes.plugins.nm_function import NMFunction
 from r_distribution.feature_segmentation import MinimumThresholdSegmentation
 
 
-def multiple_outputs_reader(m=2):
+class Slicer(pypes.component.Component):
+    "slice an index from a multidimensional dataset representing an image"
+
+    def __init__(self):
+        pypes.component.Component.__init__(self)
+
+    def run(self):
+        index = self.get_parameter("index")
+        while True:
+            for packet in self.receive_all('in'):
+                try:
+                    # perform your custom logic here
+                    data = packet.get("data")
+                    log.debug("%s received data with shape %s",
+                              self.__class__.__name__,
+                              data.shape)
+                    sliced = data[0, 300:800, ..., index].T
+                    packet.set("data", sliced)
+                    log.debug("%s sending data with shape %s",
+                              self.__class__.__name__,
+                              sliced.shape)
+                except:
+                    log.error('Component Failed: %s',
+                              self.__class__.__name__, exc_info=True)
+
+                # send the packet to the next component
+                self.send('out', packet)
+
+            # yield the CPU, allowing another component to run
+            self.yield_ctrl()
+
+
+def multiple_outputs_reader(m=2, index=0):
     "repeat the output of the reader m times"
     reader = Hdf5ReadDataset()
     reader.__metatype__ = "TRANSFORMER"
+    slicer = Slicer()
+    slicer.set_parameter("index", index)
     out = NMFunction(n=1, m=m)
     network = {
         reader: {
+            slicer: ("out", "in")
+        },
+        slicer: {
             out: ("out", "in")
         }
     }
@@ -47,21 +84,21 @@ def average():
 
 def datasets(*_):
     "return the name of the datasets"
-    return ("postprocessing/absorption",
-            "postprocessing/visibility_reduction")
+    return ("postprocessing/dpc_reconstruction",
+            "postprocessing/dpc_reconstruction")
 
 
 def log_function(df, a):
     "logarithm ratio"
-    return (np.log(a)/np.log(df),)
+    return (np.log(df)/np.log(a),)
 
 
 def ratio_thickness_network():
     in1out2 = NMFunction(n=1, m=2)
     in1out2.__metatype__ = "ADAPTER"
     in1out2.set_parameter("function", datasets)
-    abs_reader = HigherOrderComponent(multiple_outputs_reader(m=4))
-    df_reader = HigherOrderComponent(multiple_outputs_reader(m=3))
+    abs_reader = HigherOrderComponent(multiple_outputs_reader(m=4, index=0))
+    df_reader = HigherOrderComponent(multiple_outputs_reader(m=3, index=2))
     feature_segmentation = MinimumThresholdSegmentation()
     feature_segmentation_out = NMFunction(m=4)
     reader_outputs = NMFunction(n=3)

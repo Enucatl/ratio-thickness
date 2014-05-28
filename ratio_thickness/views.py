@@ -9,34 +9,69 @@ import json
 @view_config(route_name='datasets', renderer='json')
 def get_datasets(request):
     datasets = [
-
         {
             "name": "Sugar",
             "file": "ratio_thickness/static/data/S00001_S00100.hdf5",
-            "a (mm)": 50,
-            "b (mm)": 6.3,
+            "a (mm)": 121,
+            "b (mm)": 14,
             "simulated": False,
+            "scattering": "high",
+        },
+        {
+            "name": "Salt",
+            "file": "ratio_thickness/static/data/S00101_S00200.hdf5",
+            "a (mm)": 121,
+            "b (mm)": 14,
+            "simulated": False,
+            "scattering": "high",
+        },
+        {
+            "name": "Coffee",
+            "file": "ratio_thickness/static/data/S00201_S00300.hdf5",
+            "a (mm)": 121,
+            "b (mm)": 14,
+            "simulated": False,
+            "scattering": "high",
+        },
+        {
+            "name": "Rice flour (fine)",
+            "file": "ratio_thickness/static/data/S00003_S00102.hdf5",
+            "a (mm)": 121,
+            "b (mm)": 14,
+            "simulated": False,
+            "scattering": "high",
+        },
+        {
+            "name": "Corn flour (finer)",
+            "file": "ratio_thickness/static/data/S00103_S00202.hdf5",
+            "a (mm)": 121,
+            "b (mm)": 14,
+            "simulated": False,
+            "scattering": "high",
         },
         {
             "name": "Fish",
             "file": "ratio_thickness/static/data/S00011_S00250.hdf5",
-            "a (mm)": 50,
-            "b (mm)": 6.3,
+            "a (mm)": 26,
+            "b (mm)": 0,
             "simulated": False,
+            "scattering": "low",
         },
         {
             "name": "Teflon",
-            "file": "ratio_thickness/static/data/S00208_S00307.hdf5",
+            "file": "ratio_thickness/static/data/S00501_S00600.hdf5",
             "a (mm)": 50,
             "b (mm)": 6.3,
             "simulated": False,
+            "scattering": "low",
         },
         {
             "name": "Nylon",
-            "file": "ratio_thickness/static/data/S00108_S00207.hdf5",
+            "file": "ratio_thickness/static/data/S00401_S00500.hdf5",
             "a (mm)": 50,
             "b (mm)": 9.40,
             "simulated": False,
+            "scattering": "low",
         },
         {
             "name": "Aluminium",
@@ -44,6 +79,7 @@ def get_datasets(request):
             "a (mm)": 30.50,
             "b (mm)": 1,
             "simulated": False,
+            "scattering": "low",
         },
         {
             "name": "Polystyrene",
@@ -51,6 +87,7 @@ def get_datasets(request):
             "a (mm)": 62,
             "b (mm)": 20,
             "simulated": False,
+            "scattering": "high",
         },
         {
             "name": "Carbon fibers",
@@ -58,6 +95,7 @@ def get_datasets(request):
             "a (mm)": 49.35,
             "b (mm)": 4.1,
             "simulated": False,
+            "scattering": "high",
         },
         {
             "name": "Copper",
@@ -65,62 +103,14 @@ def get_datasets(request):
             "a (mm)": 30.50,
             "b (mm)": 1,
             "simulated": False,
+            "scattering": "high",
         },
         {
             "name": "Paper",
-            "file": "ratio_thickness/static/data/S00415_S00514.hdf5",
+            "file": "ratio_thickness/static/data/S00301_S00400.hdf5",
             "a (mm)": 96,
             "b (mm)": 37,
             "simulated": False,
-        },
-        {
-            "name": "Sim. Ag",
-            "file": "ratio_thickness/static/sim_data/Ag.hdf5",
-            "b (mm)": 0.1,
-            "a (mm)": 100,
-            "simulated": True,
-        },
-        {
-            "name": "Sim. Al",
-            "file": "ratio_thickness/static/sim_data/Al.hdf5",
-            "b (mm)": 0.1,
-            "a (mm)": 100,
-            "simulated": True,
-        },
-        {
-            "name": "Sim. Au",
-            "file": "ratio_thickness/static/sim_data/Au.hdf5",
-            "b (mm)": 0.1,
-            "a (mm)": 100,
-            "simulated": True,
-        },
-        {
-            "name": "Sim. C",
-            "file": "ratio_thickness/static/sim_data/C.hdf5",
-            "b (mm)": 0.1,
-            "a (mm)": 100,
-            "simulated": True,
-        },
-        {
-            "name": "Sim. Cu",
-            "file": "ratio_thickness/static/sim_data/Cu.hdf5",
-            "b (mm)": 0.1,
-            "a (mm)": 100,
-            "simulated": True,
-        },
-        {
-            "name": "Sim. Fe",
-            "file": "ratio_thickness/static/sim_data/Fe.hdf5",
-            "b (mm)": 0.1,
-            "a (mm)": 100,
-            "simulated": True,
-        },
-        {
-            "name": "Sim. Si",
-            "file": "ratio_thickness/static/sim_data/Si.hdf5",
-            "b (mm)": 0.1,
-            "a (mm)": 100,
-            "simulated": True,
         },
     ]
     return datasets
@@ -143,12 +133,13 @@ def get_normalized_chi_square(request):
         fitted[..., 2] *= flat_parameters[..., 2] / fitted[..., 0]
         fitted[..., 1] += flat_parameters[..., 1]
         fitted[..., 0] *= flat_parameters[..., 0]
-        dataset = np.tile(np.arange(n),
-                          (
-                              points.shape[0],
-                              points.shape[1],
-                              1
-                          ))
+        dataset = np.tile(
+            np.arange(n),
+            (
+                points.shape[0],
+                points.shape[1],
+                1
+            ))
         dataset = 2 * np.pi * dataset / (n + 1) + fitted[..., 1, np.newaxis]
         dataset = (fitted[..., 0, np.newaxis] +
                    fitted[..., 2, np.newaxis] * np.cos(dataset)) / n
