@@ -4,3 +4,4 @@ static/bootstrap*
 pyramid.log
 pyramid.pid
 *.json
+*.hdf5
