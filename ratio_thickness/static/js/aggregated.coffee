@@ -81,7 +81,6 @@ jQuery ->
                 JSON.parse request.responseText
             request.post JSON.stringify(datasets), (error, data) ->
                 return console.warn error if error?
-                console.log data
                 for plot in plots
                     width = $(plot.placeholder).width()
                     plot.plot.width width
