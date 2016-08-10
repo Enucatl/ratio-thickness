@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-make -C ratio_thickness/static/data
-python setup.py develop
-python runapp.py
