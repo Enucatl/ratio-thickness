@@ -18,7 +18,7 @@ print(aggregated[, .(
     by="name"])
 
 plot = ggplot(aggregated) + 
-    geom_point(aes(x=A, y=R, group=name, colour=name)) +
+    geom_point(aes(x=A, y=R, group=name, colour=name), size=2) +
     scale_color_brewer(type="qual", palette="Paired",
                        breaks=unique(aggregated$name)) +
     labs(
